@@ -1,0 +1,18 @@
+
+nz-content {
+  margin: 0 16px;
+}
+
+nz-layout {
+  height: 100%;
+}
+
+nz-footer {
+  text-align: center;
+}
+
+.inner-content {
+  padding: 24px;
+  background: #fff;
+  min-height: 360px;
+}

@@ -1,0 +1,65 @@
+<nz-header>
+  <div class="app-header">
+    <nz-row nzAlign="middle" nzJustify="space-around">
+      <nz-col nzSpan="7" nzOffset="1" class="example-input">
+          <input placeholder="Search for" nz-input [(ngModel)]="inputValue" (input)="onInput($event)"
+                 [nzAutocomplete]="auto"/>
+        <nz-autocomplete [nzDataSource]="options" nzBackfill #auto></nz-autocomplete>
+      </nz-col>
+      <nz-col nzSpan="7" nzOffset="7">
+        <nz-row nzAlign="middle" nzJustify="end" [nzGutter]="32">
+          <nz-col>
+            <nz-button-group>
+              <nz-badge [nzCount]="5">
+                <button nz-button nz-dropdown [nzDropdownMenu]="menu" nzPlacement="bottomLeft">
+                  <i nz-icon nzType="notification" [nzTheme]="'twotone'" [nzTwotoneColor]="'#52c41a'"></i>
+                </button>
+              </nz-badge>
+            </nz-button-group>
+            <nz-dropdown-menu #menu="nzDropdownMenu">
+              <nz-list nzBordered nzSize="small">
+                <nz-list-item *ngFor="let item of data">
+                  <nz-avatar nzIcon="user"></nz-avatar>
+                  {{item}}
+                </nz-list-item>
+                <nz-list-footer><a routerLink="#">clear all</a></nz-list-footer>
+              </nz-list>
+            </nz-dropdown-menu>
+          </nz-col>
+          <nz-col>
+            <nz-button-group>
+              <button nz-button nz-dropdown [nzDropdownMenu]="menu2" nzPlacement="bottomLeft">
+                <i nz-icon nzType="container" [nzTheme]="'twotone'" [nzTwotoneColor]="'#eb2f96'"></i>
+              </button>
+            </nz-button-group>
+            <nz-dropdown-menu #menu2="nzDropdownMenu">
+              <nz-list nzBordered nzSize="small">
+                <nz-list-item *ngFor="let item of data">
+                  <nz-avatar nzIcon="user"></nz-avatar>
+                  {{item}}
+                </nz-list-item>
+              </nz-list>
+            </nz-dropdown-menu>
+          </nz-col>
+
+          <nz-col nzOffset="1">
+            <nz-button-group>
+              <button nz-button nz-dropdown [nzDropdownMenu]="menu3" nzPlacement="bottomLeft">
+                <i nz-icon nzType="user"></i>
+              </button>
+              <button nz-button (click)="showConfirm()">anc.py</button>
+            </nz-button-group>
+            <nz-dropdown-menu #menu3="nzDropdownMenu">
+              <ul nz-menu>
+                <li nz-menu-item>Profile</li>
+                <li nz-menu-item>Settings</li>
+                <li nz-menu-item (click)="showConfirm()">Log Out</li>
+              </ul>
+            </nz-dropdown-menu>
+          </nz-col>
+
+        </nz-row>
+      </nz-col>
+    </nz-row>
+  </div>
+</nz-header>

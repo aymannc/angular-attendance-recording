@@ -1,0 +1,24 @@
+.logo {
+  height: 32px;
+  background: rgba(255, 255, 255, 0.2);
+  margin: 16px;
+}
+
+nz-header {
+  background: #fff;
+  padding: 0;
+}
+
+nz-list-item {
+  background-color: white;
+}
+
+nz-list-item:hover {
+  background-color: dodgerblue;
+  color: white;
+  cursor: pointer;
+}
+
+.header-notif-area {
+  margin-right: 20px;
+}

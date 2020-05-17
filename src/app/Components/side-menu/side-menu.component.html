@@ -1,0 +1,35 @@
+<div class="logo">
+  <a routerLink="/">
+    <img src="https://i.ibb.co/wcmkb1x/Whats-App-Image-2020-05-16-at-04-23-05.jpg" alt="logo" height="50px">
+    <span>EagleEye</span>
+  </a>
+</div>
+<ul nz-menu nzTheme="dark" nzMode="inline">
+  <li nz-submenu nzTitle="Users managment" nzIcon="user">
+    <ul>
+      <li nz-menu-item [routerLink]="['/users']">Users List</li>
+      <li nz-menu-item [routerLink]="['/users','add']">Add User</li>
+    </ul>
+  </li>
+  <li nz-submenu nzTitle="Camera Management" nzIcon="video-camera">
+    <ul>
+      <li nz-menu-item>Cameras List</li>
+      <li nz-menu-item>Maintenance Schedule</li>
+    </ul>
+  </li>
+  <li nz-submenu nzTitle="Model Configuration" nzIcon="setting">
+    <ul>
+      <li nz-menu-item>Add Pictures</li>
+      <li nz-menu-item>Retrain</li>
+    </ul>
+  </li>
+  <li nz-submenu nzTitle="Complaints Management" nzIcon="folder-open">
+    <ul>
+      <li nz-menu-item>Complaints List</li>
+    </ul>
+  </li>
+  <li nz-menu-item>
+    <i nz-icon nzType="dot-chart"></i>
+    <span>Statistics</span>
+  </li>
+</ul>

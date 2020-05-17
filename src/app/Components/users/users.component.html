@@ -1,0 +1,101 @@
+<div nz-row nzAlign="middle" [nzGutter]="[16, 24]">
+  <div nz-col nzSpan="7" nzOffset="1">
+    <label for="table-search">
+    </label><input id="table-search" nz-input placeholder="Search"/>
+  </div>
+  <div nz-col nzSpan="7" nzOffset="8">
+    <button nz-button nzType="primary" nzSize="large">
+      <a [routerLink]="['/users','add']">Add user</a>
+    </button>
+  </div>
+</div>
+<div nz-row nzAlign="middle" style="margin-top: 50px">
+  <div nz-col nzFlex="1">
+    <nz-table
+      nzShowSizeChanger
+      [nzData]="listOfRandomUser"
+      [nzFrontPagination]="false"
+      [nzLoading]="loading"
+      [nzTotal]="total"
+      [nzPageSize]="pageSize"
+      [nzPageIndex]="pageIndex"
+      (nzQueryParams)="onQueryParamsChange($event)"
+    >
+      <thead>
+      <tr>
+        <th nzColumnKey="name" [nzSortFn]="true">Name</th>
+        <th nzColumnKey="email" [nzSortFn]="true" [nzFilters]="filterRoles" [nzFilterFn]="true">Role</th>
+        <th nzColumnKey="gender" [nzFilters]="filterGender" [nzFilterFn]="true">Gender</th>
+        <th nzColumnKey="email" [nzSortFn]="true">Email</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let data of listOfRandomUser">
+        <td>{{ data.name.first }} {{ data.name.last }}</td>
+
+        <td>
+          <nz-tag [nzColor]="getRandomTagColor()">{{getRandomTag()}}</nz-tag>
+        </td>
+        <td>{{ data.gender }}</td>
+        <td>{{ data.email }}</td>
+
+      </tr>
+      </tbody>
+    </nz-table>
+  </div>
+
+</div>
+<!--<nz-space nzDirection="vertical" nzSize="middle">-->
+<!--  <nz-space-item>-->
+<!--    <div nz-row nzAlign="middle" [nzGutter]="[16, 24]">-->
+<!--      <div nz-col nzSpan="7" nzOffset="1">-->
+<!--        <label for="table-search">Search</label>-->
+<!--        <input id="table-search" nz-input placeholder="Search"/>-->
+<!--      </div>-->
+<!--      <div nz-col nzSpan="7" nzOffset="8">-->
+<!--        <button nz-button nzType="primary" nzSize="large">-->
+<!--          <a [routerLink]="['/add']">Add user</a>-->
+<!--        </button>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </nz-space-item>-->
+<!--  <nz-space-item>-->
+<!--    <div nz-row nzAlign="middle">-->
+<!--      <div nz-col nzFlex="1">-->
+<!--        <nz-table-->
+<!--          nzShowSizeChanger-->
+<!--          [nzData]="listOfRandomUser"-->
+<!--          [nzFrontPagination]="false"-->
+<!--          [nzLoading]="loading"-->
+<!--          [nzTotal]="total"-->
+<!--          [nzPageSize]="pageSize"-->
+<!--          [nzPageIndex]="pageIndex"-->
+<!--          (nzQueryParams)="onQueryParamsChange($event)"-->
+<!--        >-->
+<!--          <thead>-->
+<!--          <tr>-->
+<!--            <th nzColumnKey="name" [nzSortFn]="true">Name</th>-->
+<!--            <th nzColumnKey="email" [nzSortFn]="true" [nzFilters]="filterRoles" [nzFilterFn]="true">Role</th>-->
+<!--            <th nzColumnKey="gender" [nzFilters]="filterGender" [nzFilterFn]="true">Gender</th>-->
+<!--            <th nzColumnKey="email" [nzSortFn]="true">Email</th>-->
+<!--          </tr>-->
+<!--          </thead>-->
+<!--          <tbody>-->
+<!--          <tr *ngFor="let data of listOfRandomUser">-->
+<!--            <td>{{ data.name.first }} {{ data.name.last }}</td>-->
+
+<!--            <td>-->
+<!--              <nz-tag [nzColor]="getRandomTagColor()">{{getRandomTag()}}</nz-tag>-->
+<!--            </td>-->
+<!--            <td>{{ data.gender }}</td>-->
+<!--            <td>{{ data.email }}</td>-->
+
+<!--          </tr>-->
+<!--          </tbody>-->
+<!--        </nz-table>-->
+<!--      </div>-->
+
+<!--    </div>-->
+<!--  </nz-space-item>-->
+<!--</nz-space>-->
+
