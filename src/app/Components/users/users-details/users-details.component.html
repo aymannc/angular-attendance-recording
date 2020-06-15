@@ -1,1 +1,24 @@
-<p>users-details works!</p>
+<nz-spin [nzSpinning]="isLoading" *ngIf="apiService.userDetails || isLoading;else errorMessage">
+  <nz-skeleton [nzLoading]="loading">
+    <div nz-row nzJustify="end" [nzGutter]="16">
+      <div nz-col>
+        <button nz-button nzType="primary" nzSize="large" (click)="modifyUser()">Modify</button>
+      </div>
+      <div nz-col>
+        <button nz-button nzType="danger" nzSize="large" (click)="deleteUser()">Delete</button>
+      </div>
+    </div>
+
+    <app-user-description></app-user-description>
+  </nz-skeleton>
+</nz-spin>
+<ng-template #errorMessage>
+  <nz-result nzStatus="{{apiService.userLink?'500':'404'}}" nzTitle="{{apiService.userLink?'500':'404'}}"
+             nzSubTitle="Sorry, {{apiService.userLink?'We have a server error !':'You didn\'t specify a user!'}}">
+    <div nz-result-extra>
+      <button nz-button nzType="primary" (click)="navigateToUsers()">Back to users List</button>
+    </div>
+  </nz-result>
+</ng-template>
+
+

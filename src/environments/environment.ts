@@ -3,7 +3,17 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  firebaseConfig: {
+    apiKey: 'AIzaSyC1K-CsOD8TzunlqO_e6HwUVg2bOoB5AT8',
+    authDomain: 'anc-attendance-recording.firebaseapp.com',
+    databaseURL: 'https://anc-attendance-recording.firebaseio.com',
+    projectId: 'anc-attendance-recording',
+    storageBucket: 'anc-attendance-recording.appspot.com',
+    messagingSenderId: '131708026840',
+    appId: '1:131708026840:web:4c9be9182f796feb3c3cad',
+    measurementId: 'G-EE82JSSVG3'
+  }
 };
 
 /*

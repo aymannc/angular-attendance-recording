@@ -1,5 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {NzModalService} from 'ng-zorro-antd';
+import {Router} from '@angular/router';
+import {AuthService} from '../../Services/auth.service';
+import {ApiService} from '../../Services/api.service';
 
 @Component({
   selector: 'app-header',
@@ -7,8 +10,6 @@ import {NzModalService} from 'ng-zorro-antd';
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements OnInit {
-  inputValue?: string;
-  options: string[] = [];
   data = [
     'Racing car sprays burning fuel into crowd.',
     'Japanese princess to wed commoner.',
@@ -16,22 +17,42 @@ export class HeaderComponent implements OnInit {
     'Man charged over missing wedding girl.',
     'Los Angeles battles huge wildfires.'
   ];
+  isVisibleMiddle: boolean;
+  pythonApiUrl: string;
+  springApiUrl: string;
 
-  constructor(private modal: NzModalService) {
+  constructor(private modal: NzModalService,
+              public auth: AuthService,
+              private api: ApiService,
+              private router: Router) {
   }
 
   ngOnInit(): void {
+    console.log(this.auth.authUser?.value);
   }
 
-  onInput(event: Event): void {
-    const value = (event.target as HTMLInputElement).value;
-    this.options = value ? [value, value + value, value + value + value] : [];
-  }
-
-  showConfirm(): void {
+  logOut(): void {
     this.modal.confirm({
       nzTitle: '<i>Do you Want to logout?</i>',
-      nzOnOk: () => console.log('OK')
+      nzOnOk: () => this.auth.logOut()
     });
+  }
+
+  showProfile() {
+    this.router.navigate(
+      ['/profile']);
+  }
+
+
+  settings(): void {
+    this.isVisibleMiddle = true;
+    this.pythonApiUrl = this.api.pythonApiUrl;
+    this.springApiUrl = this.api.springApiUrl;
+  }
+
+  setPublicApiUrl() {
+    this.api.pythonApiUrl = this.pythonApiUrl;
+    this.api.springApiUrl = this.springApiUrl;
+    this.isVisibleMiddle = false;
   }
 }

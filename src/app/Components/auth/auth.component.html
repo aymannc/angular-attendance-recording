@@ -1,0 +1,59 @@
+<!--<nz-spin [nzSpinning]="isLoading">-->
+<!--  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">-->
+<!--    <div class="form-group">-->
+<!--      <label for="emailLogin">Email</label>-->
+<!--      <input type="email" class="form-control" name="email" id="emailLogin" formControlName="email">-->
+<!--    </div>-->
+<!--    <div class="form-group">-->
+<!--      <label for="passLogin">Password</label>-->
+<!--      <input type="password" class="form-control" name="password" id="passLogin" formControlName="password">-->
+<!--    </div>-->
+<!--    <div class="row ml-1">-->
+<!--      <div>-->
+<!--        <button class="btn btn-primary" type="submit"-->
+<!--                [disabled]="!loginForm.valid">'Log in'-->
+<!--        </button>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </form>-->
+<!--</nz-spin>-->
+<nz-spin [nzSpinning]="isLoading">
+  <nz-row nzJustify="center" nzAlign="middle">
+    <form nz-form [formGroup]="loginForm" class="login-form" (ngSubmit)="onSubmit()">
+      <nz-row nzJustify="center" nzAlign="middle">
+        <div nz-col [nzSpan]="24">
+          <nz-form-item>
+            <nz-form-control nzErrorTip="Please input your email!">
+              <nz-input-group nzPrefixIcon="user">
+                <input type="text" nz-input formControlName="email" placeholder="Email"/>
+              </nz-input-group>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+        <div nz-col [nzSpan]="24">
+          <nz-form-item>
+            <nz-form-control nzErrorTip="Please input your Password!">
+              <nz-input-group nzPrefixIcon="lock">
+                <input type="password" nz-input formControlName="password" placeholder="Password"/>
+              </nz-input-group>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+
+        <div nz-row class="login-form-margin">
+          <div nz-col [nzSpan]="12">
+            <label nz-checkbox formControlName="remember">
+              <span>Remember me</span>
+            </label>
+          </div>
+          <div nz-col [nzSpan]="12">
+            <a class="login-form-forgot">Forgot password</a>
+          </div>
+        </div>
+        <button nz-button class="login-form-button login-form-margin" [nzType]="'primary'">Log in</button>
+
+      </nz-row>
+
+    </form>
+  </nz-row>
+</nz-spin>

@@ -1,12 +1,9 @@
-.logo {
-  height: 32px;
-  background: rgba(255, 255, 255, 0.2);
-  margin: 16px;
-}
+
 
 nz-header {
   background: #fff;
   padding: 0;
+
 }
 
 nz-list-item {
@@ -21,4 +18,22 @@ nz-list-item:hover {
 
 .header-notif-area {
   margin-right: 20px;
+}
+
+::ng-deep .vertical-center-modal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+::ng-deep .vertical-center-modal .ant-modal {
+  top: 0;
+}
+
+span {
+  color: #fff;
+  font-size: 20px;
+  font-weight: bold;
+  margin-left: 10px;
+  margin-top: 10px;
 }

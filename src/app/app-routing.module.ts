@@ -4,14 +4,48 @@ import {DemoContentComponent} from './Components/demo-content/demo-content.compo
 import {UsersComponent} from './Components/users/users.component';
 import {UserFormComponent} from './Components/users/user-form/user-form.component';
 import {UsersDetailsComponent} from './Components/users/users-details/users-details.component';
+import {CamerasComponent} from './Components/cameras/cameras.component';
+import {CamerasDetailsComponent} from './Components/cameras/cameras-details/cameras-details.component';
+import {CameraFormComponent} from './Components/cameras/camera-form/camera-form.component';
+import {CameraMaintenanceScheduleComponent} from './Components/cameras/camera-maintenance-schedule/camera-maintenance-schedule.component';
+import {ComplaintsComponent} from './Components/complaints/complaints.component';
+import {EncodeFacesComponent} from './Components/module-configuration/encode-faces/encode-faces.component';
+import {DetectFacesComponent} from './Components/module-configuration/detect-faces/detect-faces.component';
+import {MyUploadComponent} from './Components/module-configuration/my-upload/my-upload.component';
+import {AuthComponent} from './Components/auth/auth.component';
+import {AuthGuard, LoginPageGuard, NoSelectedUserGard} from './Services/auth.guard';
+import {ProfileComponent} from './Components/profile/profile.component';
 
 const routes: Routes = [
-  {path: '', component: DemoContentComponent},
+  {path: '', component: DemoContentComponent, canActivate: [AuthGuard]},
+  {path: 'login', component: AuthComponent, canActivate: [LoginPageGuard]},
+  {path: 'profile', component: ProfileComponent, canActivate: [AuthGuard]},
   {
     path: 'users', children: [
       {path: '', component: UsersComponent},
       {path: 'add', component: UserFormComponent},
-      {path: 'details/:id', component: UsersDetailsComponent}
+      {path: 'details', component: UsersDetailsComponent}
+        // , canActivate: [NoSelectedUserGard]}
+    ]
+  },
+  {
+    path: 'cameras', children: [
+      {path: '', component: CamerasComponent},
+      {path: 'add', component: CameraFormComponent},
+      {path: 'maintenance-schedule', component: CameraMaintenanceScheduleComponent},
+      {path: 'details/:id', component: CamerasDetailsComponent}
+    ]
+  },
+  {
+    path: 'complaints', children: [
+      {path: '', component: ComplaintsComponent},
+    ]
+  },
+  {
+    path: 'module-configuration', children: [
+      {path: 'detect-faces', component: DetectFacesComponent},
+      {path: 'add', component: MyUploadComponent},
+      {path: 'encode-faces', component: EncodeFacesComponent},
     ]
   },
 ];

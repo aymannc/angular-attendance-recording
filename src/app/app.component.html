@@ -1,5 +1,5 @@
 <nz-layout>
-  <nz-sider nzWidth="250px">
+  <nz-sider nzWidth="250px" *ngIf="checkForUser()">
     <app-side-menu></app-side-menu>
   </nz-sider>
   <nz-layout>
@@ -11,6 +11,6 @@
       </div>
 
     </nz-content>
-    <nz-footer>©2020 EagleEye</nz-footer>
+    <!--    <nz-footer>©2020 EagleEye</nz-footer>-->
   </nz-layout>
 </nz-layout>

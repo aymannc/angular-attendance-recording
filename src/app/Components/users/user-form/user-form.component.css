@@ -1,3 +1,26 @@
 [nz-form] {
   max-width: 600px;
 }
+
+.steps-content {
+  margin-top: 16px;
+  border: 1px dashed #e9e9e9;
+  border-radius: 6px;
+  /*background-color: #fafafa;*/
+  min-height: 200px;
+  text-align: center;
+  padding-top: 80px;
+}
+
+.steps-action {
+  margin-top: 24px;
+}
+
+button {
+  margin-right: 8px;
+}
+
+nz-steps {
+  display: block;
+  box-shadow: rgb(232, 232, 232) 0 -1px 0 0 inset;
+}
