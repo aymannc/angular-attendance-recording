@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {BehaviorSubject, throwError} from 'rxjs';
 import {Router} from '@angular/router';
-import {User} from '../Data/UtilisateursResponse.module';
+import {User} from '../Data/APIDataClasses.module';
 import {catchError, tap} from 'rxjs/operators';
 import {ApiService} from './api.service';
 
@@ -57,7 +57,6 @@ export class AuthService {
 
 
   checkForUser() {
-    console.log('checking for a user');
     const user: User = JSON.parse(localStorage.getItem('user'));
     if (user !== null) {
       this.authUser.next(user);
@@ -78,15 +77,4 @@ export class AuthService {
     this.authUser.next(user);
     localStorage.setItem('user', JSON.stringify(user));
   }
-
-  //
-
-  //
-  // // private autoLogout(expirationTime: number) {
-  // //   this.expirationTimeOut = setTimeout(() => {
-  // //     this.logOut();
-  // //   }, expirationTime);
-  // // }
-  //
-
 }

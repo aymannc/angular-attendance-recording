@@ -10,7 +10,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {en_US, NZ_I18N} from 'ng-zorro-antd/i18n';
-import {registerLocaleData} from '@angular/common';
+import {DatePipe, registerLocaleData} from '@angular/common';
 import en from '@angular/common/locales/en';
 import {NgZorroAntdModule, NzAutocompleteModule, NzBreadCrumbModule, NzButtonModule, NzGridModule, NzInputModule} from 'ng-zorro-antd';
 import {HeaderComponent} from './Components/header/header.component';
@@ -29,7 +29,6 @@ import {CamerasDetailsComponent} from './Components/cameras/cameras-details/came
 import {CameraFormComponent} from './Components/cameras/camera-form/camera-form.component';
 import {CameraMaintenanceScheduleComponent} from './Components/cameras/camera-maintenance-schedule/camera-maintenance-schedule.component';
 import {ComplaintsComponent} from './Components/complaints/complaints.component';
-import {AddPicturesComponent} from './Components/module-configuration/add-pictures/add-pictures.component';
 import {EncodeFacesComponent} from './Components/module-configuration/encode-faces/encode-faces.component';
 import {AddPicturesBetaComponent} from './Components/module-configuration/add-pictures-beta/add-pictures-beta.component';
 import {DetectFacesComponent} from './Components/module-configuration/detect-faces/detect-faces.component';
@@ -60,7 +59,6 @@ registerLocaleData(en);
     CameraFormComponent,
     CameraMaintenanceScheduleComponent,
     ComplaintsComponent,
-    AddPicturesComponent,
     EncodeFacesComponent,
     AddPicturesBetaComponent,
     DetectFacesComponent,
@@ -87,7 +85,7 @@ registerLocaleData(en);
     NgZorroAntdModule,
     NgxChartsModule
   ],
-  providers: [{provide: NZ_I18N, useValue: en_US}],
+  providers: [{provide: NZ_I18N, useValue: en_US}, DatePipe],
   bootstrap: [AppComponent]
 })
 export class AppModule {

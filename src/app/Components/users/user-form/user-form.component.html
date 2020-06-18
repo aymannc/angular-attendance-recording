@@ -1,16 +1,20 @@
+<nz-row nzJustify="end">
+  <nz-col>
+    <button nz-button nzType="primary" (click)="addNewUser()" *ngIf="current == 2">Add new user</button>
+  </nz-col>
+</nz-row>
 <nz-steps nzType="navigation" [nzCurrent]="current" nzSize="small" (nzIndexChange)="onIndexChange($event)">
-  <nz-step nzTitle="User's type"></nz-step>
-  <nz-step nzTitle="Details"></nz-step>
-  <nz-step nzTitle="Validation"></nz-step>
+  <nz-step nzTitle="User's type" [nzDisabled]="current === 2"></nz-step>
+  <nz-step nzTitle="Details" [nzDisabled]="current === 2 || !userType"></nz-step>
+  <nz-step nzTitle="Results" [nzDisabled]="current !== 2"></nz-step>
 </nz-steps>
-
 <div class="steps-content">
   <div *ngIf="current == 0">
     <div nz-row nzGutter="16" nzAlign="middle" nzJustify="center">
       <div nz-col>Chose user type</div>
       <div nz-col>
         <button nz-button nz-dropdown [nzDropdownMenu]="menu">
-          {{currentUserType}}
+          {{userType}}
           <i nz-icon nzType="down"></i>
         </button>
       </div>
@@ -18,24 +22,189 @@
   </div>
   <div *ngIf="current == 1">
     <div nz-row nzGutter="16" nzAlign="middle" nzJustify="center">
-      <div nz-col>{{currentUserType}}</div>
+      <div nz-col nzXs="24" nzSm="18" nzMd="16" nzLg="14" nzXl="12">
+        <form nz-form [formGroup]="validateForm" (ngSubmit)="submitForm()">
+          <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="image">Image</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24">
+              <nz-upload
+                nzType="drag"
+                id="image"
+                [(nzFileList)]="fileList" [nzBeforeUpload]="beforeUpload" [nzLimit]="1" [nzDisabled]="uploading">
+                <!--                [nzMultiple]="true">-->
+                <p class="ant-upload-drag-icon">
+                  <i nz-icon nzType="inbox"></i>
+                </p>
+                <p class="ant-upload-text">Click or drag file to this area to upload</p>
+              </nz-upload>
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item>
+            <nz-form-control>
+              <label nz-checkbox
+                     formControlName="noImage">No image?</label>
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="email">E-mail</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="The input is not valid E-mail!">
+              <input nz-input formControlName="email" id="email"/>
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="password" nzRequired>Password</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="Please input your password!">
+              <input nz-input type="password" id="password" formControlName="password"
+                     (ngModelChange)="updateConfirmValidator()"/>
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="checkPassword" nzRequired>Confirm Password</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24" [nzErrorTip]="errorTpl">
+              <input nz-input type="password" formControlName="checkPassword" id="checkPassword"/>
+              <ng-template #errorTpl let-control>
+                <ng-container *ngIf="control.hasError('required')">
+                  Please confirm your password!
+                </ng-container>
+                <ng-container *ngIf="control.hasError('confirm')">
+                  Two passwords that you enter is inconsistent!
+                </ng-container>
+              </ng-template>
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="firstName" nzRequired>
+              First Name
+            </nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="The input is not valid First Name">
+              <input nz-input id="firstName" formControlName="prenom"/>
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="lastName" nzRequired>
+              Last Name
+            </nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="The input is not valid Last Name">
+              <input nz-input id="lastName" formControlName="nom"/>
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="gender" nzRequired>Gender</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="Please select your gender!">
+              <nz-select
+                id="gender"
+                formControlName="gender"
+                nzPlaceHolder="Select a option"
+              >
+                <nz-option *ngFor="let option of genders" [nzLabel]="option" [nzValue]="option"></nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired>Date of birth</nz-form-label>
+            <nz-form-control [nzSm]="16" [nzXs]="24" nzErrorTip="The input is not valid date!">
+              <nz-date-picker formControlName="dateNaissance" style="width: 250px;"></nz-date-picker>
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="phoneNumber" nzRequired>
+              Phone Number
+            </nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24" [nzErrorTip]="errorTpl2">
+              <input nz-input id="phoneNumber" formControlName="phoneNumber"/>
+            </nz-form-control>
+            <ng-template #errorTpl2 let-control>
+              <ng-container *ngIf="control.hasError('required')">
+                Please add a phone number!
+              </ng-container>
+              <ng-container *ngIf="control.hasError('chars')">
+                That is not a valid phone number!
+              </ng-container>
+            </ng-template>
+          </nz-form-item>
+          <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="address" nzRequired>
+              Address
+            </nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="The input is not valid Address">
+              <textarea nz-input id="address" formControlName="adresse" nzAutosize></textarea>
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="cin" nzRequired>
+              CIN
+            </nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="The input is not valid CIN">
+              <input nz-input id="cin" formControlName="cin"/>
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item *ngIf="isStudent()">
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="cne" nzRequired>
+              CNE
+            </nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="The input is not valid CNE">
+              <input nz-input id="cne" formControlName="cne"/>
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item *ngIf="isStudentOrProf()">
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="departement" nzRequired>Departement</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="Please select a Departement!">
+              <nz-select
+                id="department"
+                formControlName="departement"
+                nzPlaceHolder="Select a option"
+              >
+                <nz-option [nzValue]="departement.nomDepartement" [nzLabel]="departement.nomDepartement"
+                           *ngFor="let departement of departments"></nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item *ngIf="isStudent()">
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="field" nzRequired>Field</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="Please select a Field!">
+              <nz-select
+                id="field"
+                formControlName="filiere"
+                nzPlaceHolder="Select a option"
+              >
+                <nz-option [nzValue]="filiere.nomFiliere" [nzLabel]="filiere.nomFiliere"
+                           *ngFor="let filiere of filieres"></nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item *ngIf="isStudent()">
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="semester" nzRequired>Semester</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="Please select a Semester!">
+              <nz-select
+                id="semester"
+                formControlName="semester"
+                nzPlaceHolder="Select a option"
+              >
+                <nz-option [nzValue]="semester.nom" [nzLabel]="semester.nom"
+                           *ngFor="let semester of semesters"></nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-item>
+        </form>
+      </div>
     </div>
   </div>
   <div *ngIf="current == 2">
     <app-user-description></app-user-description>
   </div>
 </div>
-<div class="steps-action">
-  <button nz-button nzType="default" (click)="pre()" *ngIf="current > 0">
-    <span>Previous</span>
-  </button>
-  <button nz-button nzType="default" (click)="next()" *ngIf="current < 2">
-    <span>Next</span>
-  </button>
-  <button nz-button nzType="primary" (click)="done()" *ngIf="current === 2">
-    <span>Save</span>
-  </button>
-</div>
+<nz-row nzJustify="end">
+  <nz-col>
+    <div class="steps-action">
+      <button nz-button nzType="default" (click)="pre()" *ngIf="current > 0 && current < 2">
+        <span>Previous</span>
+      </button>
+      <button nz-button nzType="primary" (click)="next()" *ngIf="current < 2">
+        <span>Next</span>
+      </button>
+    </div>
+  </nz-col>
+</nz-row>
 <nz-dropdown-menu #menu="nzDropdownMenu">
   <ul nz-menu>
     <li nz-menu-item (click)="changeUserType(userType)" *ngFor="let userType of userTypes">{{userType}}</li>

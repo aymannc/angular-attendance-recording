@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {NzTableQueryParams} from 'ng-zorro-antd/table';
 import {NzContextMenuService, NzDropdownMenuComponent, NzModalService} from 'ng-zorro-antd';
 import {ApiService} from '../../Services/api.service';
-import {User} from '../../Data/UtilisateursResponse.module';
+import {User} from '../../Data/APIDataClasses.module';
 import {ActivatedRoute, Router} from '@angular/router';
 
 
@@ -98,7 +98,6 @@ export class UsersComponent implements OnInit {
     sortOrder: string | null,
     filter: Array<{ key: string; value: string[] }>
   ): void {
-    console.log('Getting Data', pageIndex, pageSize, sortField, sortOrder, filter);
     this.loading = true;
     this.apiService.getUsers(pageIndex, pageSize, sortField, sortOrder, filter).subscribe(data => {
       this.loading = false;
@@ -111,7 +110,6 @@ export class UsersComponent implements OnInit {
   }
 
   onQueryParamsChange(params: NzTableQueryParams): void {
-    console.log(params);
     const {pageSize, pageIndex, sort, filter} = params;
     const currentSort = sort.find(item => item.value !== null);
     const sortField = (currentSort && currentSort.key) || null;

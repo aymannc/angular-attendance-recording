@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {NzModalService} from 'ng-zorro-antd';
+import {NzMessageService, NzModalService} from 'ng-zorro-antd';
 import {ApiService} from '../../../Services/api.service';
 import {Router} from '@angular/router';
 
@@ -13,20 +13,13 @@ export class UsersDetailsComponent implements OnInit, OnDestroy {
   loading = false;
   isLoading: boolean;
 
-  constructor(private modal: NzModalService, public apiService: ApiService, private router: Router) {
+  constructor(private modal: NzModalService, private message: NzMessageService, public apiService: ApiService, private router: Router) {
   }
 
   ngOnInit(): void {
-    this.isLoading = true;
-    this.apiService.loadUser().subscribe(user => {
-      this.isLoading = false;
-      this.apiService.userDetails = user;
-      console.log(this.apiService.userDetails);
-    }, error => {
-      this.isLoading = false;
-      console.log(error);
-    });
+    this.loadUser();
   }
+
 
   public ngOnDestroy() {
     this.apiService.userDetails = null;
@@ -37,13 +30,31 @@ export class UsersDetailsComponent implements OnInit, OnDestroy {
 
   }
 
+  loadUser() {
+    this.isLoading = true;
+    this.apiService.loadUser().subscribe(user => {
+      this.isLoading = false;
+      this.apiService.userDetails = user;
+      this.apiService.loadComplaints();
+      this.apiService.loadUserImages();
+      this.apiService.addUserProfileImage();
+      this.apiService.addUserDepartment();
+      this.apiService.addUserFiliere();
+      this.apiService.addUserSemester();
+    }, error => {
+      this.isLoading = false;
+      console.log(error);
+    });
+  }
+
+
   deleteUser() {
     this.modal.confirm({
-      nzTitle: 'Are you sure delete this user?',
-      nzContent: '<b style="color: red;">Some descriptions</b>',
+      nzTitle: 'Delete the user !',
+      nzContent: '<b style="color: red;">Are you sure delete this user?</b>',
       nzOkText: 'Yes',
       nzOkType: 'danger',
-      nzOnOk: () => console.log('OK'),
+      nzOnOk: () => this.deleteSelectedUser(),
       nzCancelText: 'No',
       nzOnCancel: () => console.log('Cancel')
     });
@@ -51,5 +62,12 @@ export class UsersDetailsComponent implements OnInit, OnDestroy {
 
   navigateToUsers() {
     this.router.navigateByUrl('/users');
+  }
+
+
+  deleteSelectedUser() {
+    this.apiService.deleteUser().subscribe(_ => {
+      this.router.navigateByUrl('/users').then(() => this.message.success('User deleted'));
+    }, error => this.message.error(error));
   }
 }

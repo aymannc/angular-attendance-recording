@@ -76,8 +76,7 @@
           <div class="context-area"
                (contextmenu)="contextMenu($event, RCMenu,data)">
             <a (click)="rightClickMenuDetails(data)" class="clickable-name">
-              {{ data?.perssone?.prenom }}
-              {{ data?.perssone?.nom }}
+              {{ data?.perssone?.prenom + data?.perssone?.nom || 'Unknown user' }}
             </a>
           </div>
         </td>
