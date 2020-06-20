@@ -1,0 +1,12 @@
+nz-select {
+  width: 200px;
+  border: 1px solid gray;
+}
+nz-select:hover {
+  border: 1px solid transparent;
+}
+
+[nz-button] {
+  margin-right: 8px;
+  margin-bottom: 12px;
+}

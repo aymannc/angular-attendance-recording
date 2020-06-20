@@ -1,0 +1,17 @@
+<nz-tabset [(nzSelectedIndex)]="selectedIndex" (nzSelectChange)="log([$event])">
+  <nz-tab
+    *ngFor="let tab of tabs;let i = index"
+    [nzTitle]="tab"
+    (nzSelect)="log(['select', tab])"
+    (nzClick)="log(['click', tab])"
+    (nzDeselect)="log(['deselect', tab])"
+  >
+    <div *ngIf="i ===0">
+      <app-cameras-stream></app-cameras-stream>
+    </div>
+    <div *ngIf="i ===1">
+
+      <app-cameras-table></app-cameras-table>
+    </div>
+  </nz-tab>
+</nz-tabset>

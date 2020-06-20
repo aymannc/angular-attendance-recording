@@ -1,0 +1,22 @@
+<nz-row>
+  <nz-col>
+    <h2>Encode faces</h2>
+  </nz-col>
+</nz-row>
+<div nz-row nzJustify="center" nzAlign="middle">
+
+  <nz-result *ngIf="results || isError"
+             nzStatus="{{results?'success':'error'}}"
+             nzTitle="{{results?'Successfully encoded':'Error encoding'}} new faces!"
+             nzSubTitle="{{results?'Operation took '+results.time_to_complete.toFixed(4)+' seconds':'Error connecting to facial recognition server'}}"
+  ></nz-result>
+</div>
+<div nz-row nzJustify="center" nzAlign="middle">
+  <nz-spin [nzSpinning]="isLoading">
+    <div nz-col>
+      <form (ngSubmit)="requestNewFacesEncoding()">
+        <button nz-button type="submit" nzType="primary" nzSize="large" [disabled]="isLoading">Encode new faces</button>
+      </form>
+    </div>
+  </nz-spin>
+</div>

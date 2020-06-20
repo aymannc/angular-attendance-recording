@@ -1,0 +1,173 @@
+<div nz-row nzJustify='start' nzAlign="middle">
+  <div nz-col [nzSpan]="3" style="margin-bottom: 20px">
+    <img *ngIf="apiService?.userDetails?.profileImage != null;else avatar"
+         [src]="apiService.getImageUrl(apiService?.userDetails?.profileImage?.slug)"
+         style="height: 150px;border-radius: 50%;">
+  </div>
+  <ng-template #avatar>
+    <nz-avatar [ngStyle]="{ 'background-color': '#00a2ae' }"
+               [nzText]="apiService?.userDetails?.perssone?.nom"
+               style="vertical-align: middle;"
+               [nzSize]="100"></nz-avatar>
+  </ng-template>
+
+  <div nz-col [nzSpan]="6" nzOffset="1">
+    <h2>{{apiService?.userDetails?.perssone?.nom}} {{apiService?.userDetails?.perssone?.prenom}}
+      - {{apiService?.userDetails?.type}} </h2>
+  </div>
+</div>
+<nz-divider nzOrientation="left" nzText="User's information"></nz-divider>
+<nz-descriptions nzBordered nzLayout="vertical">
+  <nz-descriptions-item nzTitle="Username">{{apiService?.userDetails?.nomUtilisateur}}</nz-descriptions-item>
+  <nz-descriptions-item nzTitle="First Name">{{apiService?.userDetails?.perssone?.nom}}</nz-descriptions-item>
+  <nz-descriptions-item nzTitle="Last Name">{{apiService?.userDetails?.perssone?.prenom}}</nz-descriptions-item>
+  <nz-descriptions-item nzTitle="Email">{{apiService?.userDetails?.email}}</nz-descriptions-item>
+  <nz-descriptions-item nzTitle="Account type">{{apiService?.userDetails?.type}}</nz-descriptions-item>
+  <nz-descriptions-item nzTitle="Address">{{apiService?.userDetails?.perssone?.adresse}}</nz-descriptions-item>
+  <nz-descriptions-item nzTitle="CIN">{{apiService?.userDetails?.perssone?.cin}}</nz-descriptions-item>
+  <nz-descriptions-item nzTitle="CNE" *ngIf="apiService?.userDetails?.perssone?.cne">
+    {{apiService?.userDetails?.perssone?.cne}}</nz-descriptions-item>
+  <nz-descriptions-item
+    nzTitle="Date Naissance">{{apiService?.userDetails?.perssone?.dateNaissance}}</nz-descriptions-item>
+  <nz-descriptions-item nzTitle="tele">{{apiService?.userDetails?.perssone?.tele}}</nz-descriptions-item>
+  <nz-descriptions-item
+    nzTitle="Departement" *ngIf="apiService?.userDetails?.perssone?.departement">
+    {{apiService?.userDetails?.perssone?.departement?.nomDepartement}}</nz-descriptions-item>
+  <nz-descriptions-item
+    nzTitle="Filiere" *ngIf="apiService?.userDetails?.perssone?.semester">
+    {{apiService?.userDetails?.perssone?.filiere?.nomFiliere}}</nz-descriptions-item>
+  <nz-descriptions-item
+    nzTitle="Semester" *ngIf="apiService?.userDetails?.perssone?.semester">
+    {{apiService?.userDetails?.perssone?.semester?.nom}}</nz-descriptions-item>
+</nz-descriptions>
+
+<div nz-row nzJustify='space-between'>
+  <div nz-col [nzXl]="12" nzMd="24" nzSm="24" nzXs="24">
+    <nz-divider nzOrientation="left" nzText="User images" style="padding: 0 10px"></nz-divider>
+    <div *ngIf="apiService?.userDetails?.perssone?.images?.length!==0;else addImages">
+      <nz-list>
+        <div nz-row [nzGutter]="16">
+          <div nz-col nzXXl="6" nzXl="8" nzMd="5" nzSm="12" nzXs="24"
+               *ngFor="let image of apiService?.userDetails?.perssone?.images ">
+            <nz-list-item>
+              <nz-card nzHoverable style="width:150px" [nzCover]="coverTemplate" (click)="showImageModal(image)">
+                <nz-badge nzStatus="{{image.verified?'success':'error'}}"
+                          nzText="{{image.verified?'Verified':'Not Verified'}}"></nz-badge>
+              </nz-card>
+              <ng-template #coverTemplate>
+                <img [src]="apiService.getImageUrl(image.slug)">
+              </ng-template>
+            </nz-list-item>
+          </div>
+        </div>
+      </nz-list>
+      <div class="loadmore" nz-list-load-more>
+        <nz-pagination [nzPageIndex]="imagesPageIndex" [nzTotal]="apiService?.userDetails?.perssone?.images?.length"
+                       nzShowSizeChanger
+                       [nzPageSize]="imagesPageSize" [nzResponsive]="true"
+                       (nzPageIndexChange)="someThingChanged(1)" (nzPageSizeChange)="someThingChanged(2)"
+        ></nz-pagination>
+      </div>
+    </div>
+    <ng-template #addImages>
+      <div nz-row nzJustify="center">
+        <div nz-col>
+          <button nz-button nzType="primary" (click)="navigateToAddImages()">Add Images</button>
+        </div>
+      </div>
+    </ng-template>
+  </div>
+
+  <div nz-col [nzXl]="11" nzMd="24" nzSm="24" nzXs="24" *ngIf="!apiService.addMode">
+    <nz-divider nzOrientation="left" nzText="Reclamations"></nz-divider>
+    <nz-list *ngIf="apiService.userDetails?.complaints?.length !== 0;else noComplaints" class="demo-loadmore-list"
+             [nzLoading]="initLoading">
+      <nz-list-item *ngFor="let complaint of apiService.userDetails?.complaints">
+        <ng-container>
+          <strong>{{complaint.objet?.type || complaint.titre}}</strong>
+
+          <ul nz-list-item-actions nzSize="large">
+            <nz-list-item-action>
+              <nz-badge nzStatus="{{complaint.statut?'success':'error'}}"
+                        nzText="{{complaint.statut?'Resolved':'Not Resolved'}}"></nz-badge>
+            </nz-list-item-action>
+            <nz-list-item-action><a (click)="showComplaint(complaint)">Details</a></nz-list-item-action>
+            <nz-list-item-action><a (click)="deleteComplaint(complaint._links.self)" style="color: red">Delete</a>
+            </nz-list-item-action>
+          </ul>
+        </ng-container>
+      </nz-list-item>
+      <div class="loadmore" nz-list-load-more>
+        <nz-pagination [nzPageIndex]="complaintsPageIndex" [nzTotal]="apiService?.userDetails?.complaints?.length"
+                       nzShowSizeChanger
+                       [nzPageSize]="complaintsPageSize" [nzResponsive]="true"
+                       (nzPageIndexChange)="someThingChanged(1)" (nzPageSizeChange)="someThingChanged(2)"
+        ></nz-pagination>
+      </div>
+    </nz-list>
+    <ng-template #noComplaints>
+      <div nz-row nzJustify="center">
+        <div nz-col>
+          <h3>No complaints yet !</h3>
+        </div>
+      </div>
+    </ng-template>
+  </div>
+</div>
+
+<div *ngIf="apiService?.userDetails?.type == 'Etudient' && !apiService.addMode">
+  <nz-divider nzOrientation="left" nzText="Statistique d'abscence"></nz-divider>
+  <app-student-stats></app-student-stats>
+</div>
+
+<nz-modal
+  [(nzVisible)]="isVisible"
+  nzTitle="Image details"
+  (nzOnOk)="handleOk()"
+>
+  <nz-row nzAlign="middle" nzJustify="center">
+    <nz-col nzFlex="2"><img [src]="apiService.getImageUrl(selectedImage?.slug)" width="150px"></nz-col>
+    <nz-col nzFlex="3">
+      <nz-descriptions nzTitle="Image Information">
+        <nz-descriptions-item nzTitle="URL" nzSpan="3"><a [href]="apiService.getImageUrl(selectedImage?.slug)"
+                                                          target="_blank">{{apiService.getImageUrl(selectedImage?.slug)}}</a>
+        </nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Is Verified" nzSpan="3">
+          <nz-switch [(ngModel)]="selectedImage.verified" [nzControl]="true" (click)="clickSwitch()"
+                     [nzLoading]="loading"></nz-switch>
+        </nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Set as Primary" nzSpan="3">
+          <button nz-button nzType="primary" (click)="setImageAsPrimary()" [disabled]="imageIsPrimary()"
+                  [nzLoading]="isSetImagePrimaryButtonLoading">{{imageIsPrimary() ? 'Done!' : 'Set'}}</button>
+        </nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Date Uploaded"
+                              nzSpan="3">{{selectedImage?.date | date:'medium' }}</nz-descriptions-item>
+      </nz-descriptions>
+    </nz-col>
+  </nz-row>
+</nz-modal>
+
+<nz-modal
+  [(nzVisible)]="isComplaintVisible"
+  nzTitle="Complaint details"
+  (nzOnOk)="handleComplaintOk()"
+  [nzOkLoading]="isOkLoading"
+>
+  <nz-row nzAlign="middle" nzJustify="center">
+    <nz-col nzFlex="1">
+      <nz-descriptions nzTitle="Complaint details">
+        <nz-descriptions-item nzTitle="Object"
+                              nzSpan="3">{{selectedComplaint?.objet?.type || 'Other' }}</nz-descriptions-item>
+
+        <nz-descriptions-item *ngIf="selectedComplaint?.titre" nzTitle="Title"
+                              nzSpan="3">{{selectedComplaint?.titre}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Statut" nzSpan="3">
+          <nz-switch [(ngModel)]="selectedComplaint.statut" [nzControl]="true" (click)="clickComplaintSwitch()"
+                     [nzLoading]="complaintSwitchLoading"></nz-switch>
+        </nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Content" nzSpan="3">{{selectedComplaint?.contenu}}</nz-descriptions-item>
+
+      </nz-descriptions>
+    </nz-col>
+  </nz-row>
+</nz-modal>

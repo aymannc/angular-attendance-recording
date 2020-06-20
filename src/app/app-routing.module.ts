@@ -7,14 +7,14 @@ import {UsersDetailsComponent} from './Components/users/users-details/users-deta
 import {CamerasComponent} from './Components/cameras/cameras.component';
 import {CamerasDetailsComponent} from './Components/cameras/cameras-details/cameras-details.component';
 import {CameraFormComponent} from './Components/cameras/camera-form/camera-form.component';
-import {CameraMaintenanceScheduleComponent} from './Components/cameras/camera-maintenance-schedule/camera-maintenance-schedule.component';
 import {ComplaintsComponent} from './Components/complaints/complaints.component';
 import {EncodeFacesComponent} from './Components/module-configuration/encode-faces/encode-faces.component';
 import {DetectFacesComponent} from './Components/module-configuration/detect-faces/detect-faces.component';
 import {MyUploadComponent} from './Components/module-configuration/my-upload/my-upload.component';
 import {AuthComponent} from './Components/auth/auth.component';
-import {AuthGuard, LoginPageGuard, NoSelectedUserGard} from './Services/auth.guard';
+import {AuthGuard, LoginPageGuard} from './Services/auth.guard';
 import {ProfileComponent} from './Components/profile/profile.component';
+import {LiveCameraComponent} from './Components/cameras/live-camera/live-camera.component';
 
 const routes: Routes = [
   {path: '', component: DemoContentComponent, canActivate: [AuthGuard]},
@@ -25,15 +25,15 @@ const routes: Routes = [
       {path: '', component: UsersComponent},
       {path: 'add', component: UserFormComponent},
       {path: 'details', component: UsersDetailsComponent}
-        // , canActivate: [NoSelectedUserGard]}
+      // , canActivate: [NoSelectedUserGard]}
     ]
   },
   {
     path: 'cameras', children: [
       {path: '', component: CamerasComponent},
       {path: 'add', component: CameraFormComponent},
-      {path: 'maintenance-schedule', component: CameraMaintenanceScheduleComponent},
-      {path: 'details/:id', component: CamerasDetailsComponent}
+      {path: 'details', component: CamerasDetailsComponent},
+      {path: 'live', component: LiveCameraComponent}
     ]
   },
   {

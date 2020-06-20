@@ -3,6 +3,7 @@
     <button nz-button nzType="primary" (click)="addNewUser()" *ngIf="current == 2">Add new user</button>
   </nz-col>
 </nz-row>
+<nz-spin [nzSpinning]="isLoading">
 <nz-steps nzType="navigation" [nzCurrent]="current" nzSize="small" (nzIndexChange)="onIndexChange($event)">
   <nz-step nzTitle="User's type" [nzDisabled]="current === 2"></nz-step>
   <nz-step nzTitle="Details" [nzDisabled]="current === 2 || !userType"></nz-step>
@@ -30,7 +31,7 @@
               <nz-upload
                 nzType="drag"
                 id="image"
-                [(nzFileList)]="fileList" [nzBeforeUpload]="beforeUpload" [nzLimit]="1" [nzDisabled]="uploading">
+                [(nzFileList)]="fileList" [nzBeforeUpload]="beforeUpload" [nzLimit]="1" [nzDisabled]="isLoading">
                 <!--                [nzMultiple]="true">-->
                 <p class="ant-upload-drag-icon">
                   <i nz-icon nzType="inbox"></i>
@@ -205,6 +206,7 @@
     </div>
   </nz-col>
 </nz-row>
+</nz-spin>
 <nz-dropdown-menu #menu="nzDropdownMenu">
   <ul nz-menu>
     <li nz-menu-item (click)="changeUserType(userType)" *ngFor="let userType of userTypes">{{userType}}</li>

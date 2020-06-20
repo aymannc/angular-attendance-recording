@@ -1,0 +1,21 @@
+<nz-skeleton [nzLoading]="loading">
+  <div nz-row nzJustify="end" [nzGutter]="16">
+    <div nz-col>
+      <button nz-button nzSize="large" nzType="primary" (click)="liveStreamCamera()">Live stream
+      </button>
+    </div>
+    <div nz-col>
+      <button nz-button nzSize="large" style="background-color:#ffcc00;color: white" (click)="modifyCamera()">Modify
+      </button>
+    </div>
+    <div nz-col>
+      <button nz-button nzType="danger" nzSize="large" (click)="deleteCamera()">Delete</button>
+    </div>
+  </div>
+  <div nz-row style="margin-top: 30px">
+    <div nz-col nzFlex="1">
+
+      <app-camera-description></app-camera-description>
+    </div>
+  </div>
+</nz-skeleton>

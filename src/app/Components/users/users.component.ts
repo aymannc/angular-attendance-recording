@@ -14,7 +14,13 @@ import {ActivatedRoute, Router} from '@angular/router';
 export class UsersComponent implements OnInit {
   checked = false;
   indeterminate = false;
-  listOfCurrentPageData: User[] = [];
+  setOfCheckedId = new Set<number>();
+  total = 1;
+  users: User[] = [];
+  loading = true;
+  pageSize = 10;
+  pageIndex = 1;
+  searchQeury: string;
   listOfSelection = [
     {
       text: 'Select All Row',
@@ -25,36 +31,18 @@ export class UsersComponent implements OnInit {
     {
       text: 'Select Odd Row',
       onSelect: () => {
-        this.listOfCurrentPageData.forEach((data, index) => this.updateCheckedSet(data.idUtilisateur, index % 2 !== 0));
+        this.users.forEach((data, index) => this.updateCheckedSet(data.idUtilisateur, index % 2 !== 0));
         this.refreshCheckedStatus();
       }
     },
     {
       text: 'Select Even Row',
       onSelect: () => {
-        this.listOfCurrentPageData.forEach((data, index) => this.updateCheckedSet(data.idUtilisateur, index % 2 === 0));
+        this.users.forEach((data, index) => this.updateCheckedSet(data.idUtilisateur, index % 2 === 0));
         this.refreshCheckedStatus();
       }
     }
   ];
-  listOfData: User[] = [];
-  setOfCheckedId = new Set<number>();
-  total = 1;
-  users: User[] = [];
-  loading = true;
-  pageSize = 10;
-  pageIndex = 1;
-  filterGender = [
-    {text: 'male', value: 'male'},
-    {text: 'female', value: 'female'}
-  ];
-  filterRoles = [
-    {text: 'Etudient', value: 'Etudient'},
-    {text: 'Prof', value: 'Prof'},
-    {text: 'Scolarity', value: 'Scolarity'}
-  ];
-  searchValue = '';
-  visible = false;
   private user: User;
 
   constructor(private apiService: ApiService, private router: Router,
@@ -63,40 +51,38 @@ export class UsersComponent implements OnInit {
               private modal: NzModalService) {
   }
 
-  updateCheckedSet(idUtilisateur: number, checked: boolean): void {
+  updateCheckedSet(id: number, checked: boolean): void {
     if (checked) {
-      this.setOfCheckedId.add(idUtilisateur);
+      this.setOfCheckedId.add(id);
     } else {
-      this.setOfCheckedId.delete(idUtilisateur);
+      this.setOfCheckedId.delete(id);
     }
   }
 
-  onItemChecked(idUtilisateur: number, checked: boolean): void {
-    this.updateCheckedSet(idUtilisateur, checked);
+  onItemChecked(id: number, checked: boolean): void {
+    this.updateCheckedSet(id, checked);
     this.refreshCheckedStatus();
   }
 
   onAllChecked(value: boolean): void {
-    this.listOfCurrentPageData.forEach(item => this.updateCheckedSet(item.idUtilisateur, value));
-    this.refreshCheckedStatus();
-  }
+    console.log(this.users);
+    this.users.forEach(item => this.updateCheckedSet(item.idUtilisateur, value));
 
-  onCurrentPageDataChange($event: User[]): void {
-    this.listOfCurrentPageData = $event;
+    console.log('I\'ve checked all ', this.setOfCheckedId);
     this.refreshCheckedStatus();
   }
 
   refreshCheckedStatus(): void {
-    this.checked = this.listOfCurrentPageData.every(item => this.setOfCheckedId.has(item.idUtilisateur));
-    this.indeterminate = this.listOfCurrentPageData.some(item => this.setOfCheckedId.has(item.idUtilisateur)) && !this.checked;
+    this.checked = this.users.every(item => this.setOfCheckedId.has(item.idUtilisateur));
+    this.indeterminate = this.users.some(item => this.setOfCheckedId.has(item.idUtilisateur)) && !this.checked;
   }
 
   loadDataFromServer(
     pageIndex: number,
     pageSize: number,
-    sortField: string | null,
-    sortOrder: string | null,
-    filter: Array<{ key: string; value: string[] }>
+    sortField?: string | null,
+    sortOrder?: string | null,
+    filter?: Array<{ key: string; value: string[] }>
   ): void {
     this.loading = true;
     this.apiService.getUsers(pageIndex, pageSize, sortField, sortOrder, filter).subscribe(data => {
@@ -114,11 +100,14 @@ export class UsersComponent implements OnInit {
     const currentSort = sort.find(item => item.value !== null);
     const sortField = (currentSort && currentSort.key) || null;
     const sortOrder = (currentSort && currentSort.value) || null;
+
+    this.setOfCheckedId = new Set<number>();
     this.loadDataFromServer(pageIndex, pageSize, sortField, sortOrder, filter);
   }
 
   ngOnInit(): void {
     this.loadDataFromServer(this.pageIndex, this.pageSize, null, null, []);
+    this.apiService.getDepartments();
   }
 
   contextMenu($event: MouseEvent, menu: NzDropdownMenuComponent, user: User): void {
@@ -126,26 +115,20 @@ export class UsersComponent implements OnInit {
     this.user = user;
   }
 
-  closeMenu(): void {
-    this.nzContextMenuService.close();
-  }
-
-  reset(): void {
-    this.searchValue = '';
-    this.search();
-  }
-
-  search(): void {
-    this.visible = false;
-    this.users = this.listOfData.filter((item: User) =>
-      (item.perssone.nom + item.perssone.prenom).indexOf(this.searchValue) !== -1);
-  }
-
   rightClickMenuDelete() {
-    console.log(this.user);
+    this.apiService.userDetails = this.user;
     this.modal.confirm({
       nzTitle: '<i>Do you Want to delete this user?</i>',
-      nzOnOk: () => console.log('OK')
+      nzOnOk: () => this.apiService.deleteUser().subscribe(success => {
+          this.apiService.userDetails = null;
+          this.loadDataFromServer(this.pageIndex, this.pageSize, null, null, []);
+        }
+        , error => {
+          this.modal.error({
+            nzTitle: '<i>Error deleting the user!</i>',
+            nzContent: error.error.message,
+          });
+        }),
     });
   }
 
@@ -158,7 +141,7 @@ export class UsersComponent implements OnInit {
     console.log('Modify ', this.user);
   }
 
-  getRandomTagColor(type: string): string {
+  getTagColor(type: string): string {
     switch (type) {
       case 'Scolarity':
         return 'blue';
@@ -168,4 +151,15 @@ export class UsersComponent implements OnInit {
         return 'red';
     }
   }
+
+  refreshList() {
+    if (!this.loading) {
+      this.loadDataFromServer(1, this.pageSize);
+    }
+  }
+
+  searchForUser() {
+    console.log(this.searchQeury);
+  }
+
 }

@@ -1,10 +1,9 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Departement, Filiere, Semester, UserPostData} from '../../../Data/APIDataClasses.module';
+import {Departement, Filiere, Image, Semester, UserPostData} from '../../../Data/APIDataClasses.module';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {ApiService} from '../../../Services/api.service';
 import {NzModalService, UploadFile} from 'ng-zorro-antd';
 import {DatePipe} from '@angular/common';
-import {HttpRequest} from '@angular/common/http';
 
 @Component({
   selector: 'app-user-form',
@@ -23,8 +22,7 @@ export class UserFormComponent implements OnInit, OnDestroy {
   filieres: Filiere[];
   semesters: Semester[];
   fileList: UploadFile[] = [];
-  uploading: boolean;
-  imageUploaded = false;
+  isLoading: boolean;
 
   constructor(private modal: NzModalService, private fb: FormBuilder, private apiService: ApiService,
               private datePipe: DatePipe) {
@@ -42,7 +40,7 @@ export class UserFormComponent implements OnInit, OnDestroy {
       return {confirm: true, error: true};
     }
     return {};
-  };
+  }
 
   onlyNumbers = (control: FormControl): { [s: string]: boolean } => {
     if (!control.value) {
@@ -51,18 +49,21 @@ export class UserFormComponent implements OnInit, OnDestroy {
       return {chars: true, error: true};
     }
     return {};
-  };
+  }
   beforeUpload = (file: UploadFile): boolean => {
     // this.fileList = this.fileList.concat(file);
     this.fileList = [file];
     return false;
-  };
+  }
 
   ngOnDestroy() {
     this.apiService.userDetails = null;
+    this.apiService.addMode = false;
   }
 
   ngOnInit(): void {
+
+    this.apiService.addMode = true;
     this.validateForm = this.fb.group({
       noImage: [false, [Validators.required]],
       email: [null, [Validators.email, Validators.required]],
@@ -108,30 +109,34 @@ export class UserFormComponent implements OnInit, OnDestroy {
   }
 
   handleUpload(): void {
-    const cne = this.validateForm.get('cne').value;
+    const cne = this.apiService.userDetails.perssone.cne;
     if (cne == null) {
+      this.isLoading = false;
       this.modal.error({
         nzTitle: 'Image upload failed',
-        nzContent: 'CNE is Null'
+        nzContent: 'CNE is not valide'
       });
     } else {
-      this.imageUploaded = false;
       const formData = new FormData();
       this.fileList.forEach((file: any) => {
         formData.append('file', file);
       });
       formData.append('cne', cne);
-      this.uploading = true;
-      const req = new HttpRequest('POST', this.apiService.springApiUrl + 'upload', formData);
-      this.apiService.uploadImage(req).subscribe(
-        result => {
-          this.uploading = false;
-          this.imageUploaded = true;
+      this.apiService.uploadImage(formData).subscribe(
+        (result: Image) => {
+          this.apiService.userDetails.profileImage = result;
+          if (this.apiService.userDetails.perssone.images) {
+            this.apiService.userDetails.perssone.images.push(result);
+          } else {
+            this.apiService.userDetails.perssone.images = [result];
+          }
+          this.apiService.loadUser();
+          this.isLoading = false;
+          this.current += 1;
           console.log(result);
         },
         (error) => {
-          this.uploading = false;
-          this.imageUploaded = false;
+          this.isLoading = false;
           console.log(error);
           this.modal.error({
             nzTitle: 'Image upload failed',
@@ -144,29 +149,36 @@ export class UserFormComponent implements OnInit, OnDestroy {
   }
 
   done(): void {
-    this.imageUploaded = true;
     if (this.fileList.length === 0) {
-      if (!this.validateForm.get('noImage').value) {
-        this.imageUploaded = false;
+      if (this.validateForm.get('noImage').value === false) {
         this.modal.error({
           nzTitle: '<i>You didn\'t specify an image!</i>',
-          nzContent: '<b>Do you want to continue?</b>',
-          nzOnOk: () => this.callApi()
+          nzOnOk: () => {
+          }
         });
+      } else {
+        this.callApi(false);
       }
-    }
-    if (this.imageUploaded) {
-      this.callApi();
+    } else {
+      this.callApi(true);
     }
 
   }
 
-  callApi() {
+  callApi(withPicture: boolean) {
+    this.isLoading = true;
     this.apiService.addUser(this.formToUser()).subscribe(response => {
       console.log('data', response);
       this.apiService.userDetails = response;
-      this.current += 1;
+      console.log(withPicture);
+      if (withPicture) {
+        this.handleUpload();
+      } else {
+        this.isLoading = false;
+        this.current += 1;
+      }
     }, error => {
+      this.isLoading = false;
       this.modal.error({
         nzTitle: 'Error',
         nzContent: error.error.status + ', ' + error.error.error
@@ -181,19 +193,21 @@ export class UserFormComponent implements OnInit, OnDestroy {
       this.validateForm.controls[i].markAsDirty();
       this.validateForm.controls[i].updateValueAndValidity();
     }
-    // this.handleUpload();
-
-    this.done();
     if (this.validateForm.valid) {
-      // this.done();
+      this.done();
     }
   }
 
   addNewUser() {
+
+    this.validateForm.reset();
     this.current = 0;
     this.userType = this.userTypes[1];
+    this.validateForm.get('gender').setValue(this.genders[0]);
     this.loadDropDowns();
     this.apiService.userDetails = null;
+    this.fileList = [];
+    this.isLoading = false;
   }
 
   isStudent() {
@@ -212,7 +226,6 @@ export class UserFormComponent implements OnInit, OnDestroy {
     userPostData.type = this.userType;
     userPostData.dateNaissance = this.datePipe.transform(this.validateForm.value.dateNaissance,
       'yyyy-MM-dd');
-    console.log(userPostData);
     return userPostData;
   }
 

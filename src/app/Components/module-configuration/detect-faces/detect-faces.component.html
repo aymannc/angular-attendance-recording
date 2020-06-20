@@ -1,0 +1,52 @@
+<nz-row>
+  <nz-col>
+    <h2>Detect Faces</h2>
+  </nz-col>
+</nz-row>
+<nz-upload
+  nzType="drag"
+  [(nzFileList)]="fileList" [nzBeforeUpload]="beforeUpload" [nzLimit]="1" [nzDisabled]="uploading"
+>
+  <p class="ant-upload-drag-icon">
+    <i nz-icon nzType="inbox"></i>
+  </p>
+  <p class="ant-upload-text">Click or drag file to this area to upload</p>
+  <p class="ant-upload-hint">
+    Support for a single or bulk upload. Strictly prohibit from uploading company data or other band files
+  </p>
+</nz-upload>
+
+<div nz-row style="margin-top: 16px" nzAlign="middle" nzJustify="space-around">
+  <div nz-col>
+    <button
+      nz-button
+      [nzType]="'primary'"
+      [nzLoading]="uploading"
+      (click)="handleUpload()"
+      [disabled]="!canUpload()"
+    >
+      {{ uploading ? 'Uploading' : 'Start Upload' }}s
+    </button>
+  </div>
+</div>
+
+<div *ngIf="facialRecognitionResponse">
+  <nz-row nzAlign="middle" nzJustify="center">
+    <nz-row nzAlign="middle" nzJustify="center">
+      <nz-descriptions nzTitle="Results">
+        <nz-descriptions-item
+          nzTitle="People found">{{facialRecognitionResponse.faces_found_in_image}}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="In">{{facialRecognitionResponse.data_rec_time}} seconds</nz-descriptions-item>
+      </nz-descriptions>
+    </nz-row>
+    <nz-row nzAlign="middle" nzJustify="center">
+      <nz-col nzFlex="1">
+        <p *ngIf="facialRecognitionResponse?.results_file_url">link to full image
+          :<a href="{{facialRecognitionResponse.results_file_url}}"
+              target="_blank">{{facialRecognitionResponse.results_file_url}}</a></p>
+        <img width="100%" [src]="facialRecognitionResponse.results_file_url" alt="results">
+      </nz-col>
+    </nz-row>
+  </nz-row>
+
+</div>

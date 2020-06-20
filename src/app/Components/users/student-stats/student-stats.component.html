@@ -1,0 +1,34 @@
+<nz-tabset>
+  <nz-tab nzTitle="Statistique Par Module">
+    <div nz-row nzJustify="center" style="margin-bottom: 20px">
+      <div nz-col>
+        <span>Semester : </span>
+        <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Selectioner un Semester" [(ngModel)]="semester">
+          <nz-option nzLabel="S1" nzValue="S1"></nz-option>
+          <nz-option nzLabel="S2" nzValue="S2"></nz-option>
+          <nz-option nzLabel="S3" nzValue="S3"></nz-option>
+          <nz-option nzLabel="S4" nzValue="S4"></nz-option>
+          <nz-option nzLabel="S5" nzValue="S5"></nz-option>
+        </nz-select>
+      </div>
+    </div>
+    <div nz-row nzJustify="center">
+      <ngx-charts-bar-horizontal-normalized
+        [view]="view"
+        [scheme]="colorScheme"
+        [results]="multi"
+        [gradient]="gradient"
+        [xAxis]="showXAxis"
+        [yAxis]="showYAxis"
+        [legend]="showLegend"
+        [trimYAxisTicks]="trimYAxisTicks"
+        [legendPosition]="legendPosition"
+        [showXAxisLabel]="showXAxisLabel"
+        [showYAxisLabel]="showYAxisLabel"
+        [xAxisLabel]="xAxisLabel"
+        [yAxisLabel]="yAxisLabel"
+        (select)="onSelect($event)">
+      </ngx-charts-bar-horizontal-normalized>
+    </div>
+  </nz-tab>
+</nz-tabset>
