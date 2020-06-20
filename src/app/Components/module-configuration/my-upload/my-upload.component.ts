@@ -66,7 +66,7 @@ export class MyUploadComponent {
   }
 
   getSuggestions(value: string) {
-    return [{label: 'aymannc', value: '1'}, {label: 'oufto', value: '2'}];
+    return [{label: 'NAIT CHERIF', value: '1'}, {label: 'OUFTO', value: '2'}];
   }
 
   printFullParams() {

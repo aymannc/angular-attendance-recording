@@ -231,12 +231,16 @@ export interface Embedded {
 }
 
 export interface Camera {
+  id: number;
   ip: string;
   model: string;
+  createdDate: string;
+  statuts: Status[];
+  salle?: Room;
   _links: CameraLink;
 }
 
-export interface CamerasLink {
+export interface CameraLink {
   self: Href;
   camera: Href;
   calendrieMaintenances: Href;
@@ -248,7 +252,59 @@ export interface Href {
   href: string;
 }
 
-export interface CameraLink {
+export interface RomResponse {
+  _embedded: RomResponseEmbedded;
+  _links: RomResponseLinks;
+  page: Page;
+}
+
+export interface RomResponseEmbedded {
+  salles?: (Room)[] | null;
+}
+
+export interface Room {
+  numero: number;
+  _links: RomLinks;
+}
+
+export interface RomLinks {
+  self: Href;
+  salle: Href;
+  seances: Href;
+  cameras: Href;
+}
+
+export interface RomResponseLinks {
+  first: Href;
+  self: Href;
+  next: Href;
+  last: Href;
+  profile: Href;
+}
+
+export interface StatusResponse {
+  _embedded: StatusResponseEmbedded;
+  _links: StatusResponseLinks;
+  page: Page;
+}
+
+export interface StatusResponseEmbedded {
+  statuts?: (Status)[] | null;
+}
+
+export interface Status {
+  dateVerification: string;
+  up: boolean;
+  _links: StatutsLinks;
+}
+
+export interface StatutsLinks {
+  self: Href;
+  statut: Href;
+  camera: Href;
+}
+
+export interface StatusResponseLinks {
   self: Href;
   profile: Href;
 }

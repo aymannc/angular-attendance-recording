@@ -1,8 +1,7 @@
-<nz-skeleton [nzLoading]="loading">
+<nz-skeleton [nzLoading]="loading" *ngIf="apiService.selectedCamera;else errorMessage">
   <div nz-row nzJustify="end" [nzGutter]="16">
     <div nz-col>
-      <button nz-button nzSize="large" nzType="primary" (click)="liveStreamCamera()">Live stream
-      </button>
+      <button nz-button nzSize="large" nzType="primary" (click)="goToFullScreenStream()">Full Screen Stream</button>
     </div>
     <div nz-col>
       <button nz-button nzSize="large" style="background-color:#ffcc00;color: white" (click)="modifyCamera()">Modify
@@ -14,8 +13,51 @@
   </div>
   <div nz-row style="margin-top: 30px">
     <div nz-col nzFlex="1">
-
-      <app-camera-description></app-camera-description>
+      <div nz-row nzJustify="center">
+        <div nz-col nzFlex="1">
+          <video width="100%" [controls]="true" [muted]="true" [loop]="true" [autoplay]="true">
+            <source src="assets/images/camera_demo.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+      </div>
+      <div nz-row>
+        <div nz-col nzFlex="1">
+          <nz-descriptions nzTitle="Camera details" nzBordered nzLayout="vertical">
+            <nz-descriptions-item nzTitle="Model"
+                                  [nzSpan]="2">{{apiService.selectedCamera?.model}}</nz-descriptions-item>
+            <nz-descriptions-item
+              nzTitle="Rom">{{apiService.selectedCamera?.salle ? apiService.selectedCamera?.salle?.numero :
+              'Loading ...'}}</nz-descriptions-item>
+            <nz-descriptions-item nzTitle="Ip">{{apiService.selectedCamera?.ip}}</nz-descriptions-item>
+          </nz-descriptions>
+        </div>
+      </div>
+    </div>
+    <div nz-col nzFlex="1">
+      <div nz-row nzJustify="center">
+        <div nz-col nzFlex="1">
+          <div nz-col nzSpan="16" nzOffset="4">
+            <h3 style="margin-bottom: 15px">History</h3>
+            <nz-timeline>
+              <nz-timeline-item *ngFor=" let status of apiService.selectedCamera?.statuts"
+                                [nzColor]="status.up?'green':'red'">
+                {{(status.up ? 'Up' : 'Down') + ' ,last checked ' }}{{status.dateVerification | date : 'medium'}}
+              </nz-timeline-item>
+              <nz-timeline-item nzColor="green">Camera added
+                at {{apiService.selectedCamera?.createdDate | date : 'medium'}}</nz-timeline-item>
+            </nz-timeline>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </nz-skeleton>
+<ng-template #errorMessage>
+  <nz-result nzStatus="{{apiService.selectedCamera?'500':'404'}}" nzTitle="{{apiService.userLink?'500':'404'}}"
+             nzSubTitle="Sorry, {{apiService.userLink?'We have a server error !':'You didn\'t specify a camera!'}}">
+    <div nz-result-extra>
+      <button nz-button nzType="primary" (click)="navigateToCameras()">Back to cameras List</button>
+    </div>
+  </nz-result>
+</ng-template>

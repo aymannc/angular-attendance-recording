@@ -7,7 +7,9 @@ import {
   Departement,
   Filiere,
   Image,
+  Room,
   Semester,
+  StatusResponse,
   User,
   UserPostData,
   UtilisateursResponse
@@ -25,6 +27,7 @@ export class ApiService {
   userDetails: User = null;
   userLink: string;
   selectedCamera: Camera;
+  cameraLink: string;
 
   constructor(private http: HttpClient) {
   }
@@ -45,6 +48,13 @@ export class ApiService {
 
   loadUser() {
     return this.http.get<User>(this.userLink || 'http://localhost:8080/utilisateurs/1');
+  }
+
+  loadCamera() {
+    if (this.cameraLink) {
+      return this.http.get<Camera>(this.cameraLink);
+    }
+    // return this.http.get<Camera>(this.cameraLink || 'http://localhost:8080/cameras/1');
   }
 
   setUserLink(link: string) {
@@ -128,7 +138,6 @@ export class ApiService {
   }
 
   deleteUser() {
-    console.log(this.userDetails._links.self.href);
     return this.http.delete<any>(this.userDetails._links.self.href);
   }
 
@@ -161,7 +170,33 @@ export class ApiService {
 
   getCameras(pageSize: number, pageIndex: number) {
     const requestUrl = this.springApiUrl + `cameras?page=${pageIndex - 1}&size=${pageSize}`;
-    console.log(requestUrl);
     return this.http.get<CamerasResponse>(requestUrl);
+  }
+
+  isNumber(n) {
+    return !isNaN(parseFloat(n)) && !isNaN(n - 0);
+  }
+
+  getStatus(href: string = this.selectedCamera._links.statuts.href) {
+    return this.http.get<StatusResponse>(href);
+  }
+
+  getSalle(href: string = this.selectedCamera._links.salle.href) {
+    return this.http.get<Room>(href);
+  }
+
+  setSelectedCamera(link: string) {
+    this.cameraLink = link;
+  }
+
+  injectCameras(cameras: Camera[]) {
+    cameras.forEach(camera => {
+      this.getStatus(camera._links.statuts.href).subscribe(status => {
+        camera.statuts = status._embedded.statuts;
+      });
+      this.getSalle(camera._links.salle.href).subscribe(rom => {
+        camera.salle = rom;
+      });
+    });
   }
 }

@@ -14,7 +14,7 @@ import {MyUploadComponent} from './Components/module-configuration/my-upload/my-
 import {AuthComponent} from './Components/auth/auth.component';
 import {AuthGuard, LoginPageGuard} from './Services/auth.guard';
 import {ProfileComponent} from './Components/profile/profile.component';
-import {LiveCameraComponent} from './Components/cameras/live-camera/live-camera.component';
+import {FullScreenStreamComponent} from './Components/cameras/full-screen-stream/full-screen-stream.component';
 
 const routes: Routes = [
   {path: '', component: DemoContentComponent, canActivate: [AuthGuard]},
@@ -33,7 +33,7 @@ const routes: Routes = [
       {path: '', component: CamerasComponent},
       {path: 'add', component: CameraFormComponent},
       {path: 'details', component: CamerasDetailsComponent},
-      {path: 'live', component: LiveCameraComponent}
+      {path: 'full-screen', component: FullScreenStreamComponent},
     ]
   },
   {

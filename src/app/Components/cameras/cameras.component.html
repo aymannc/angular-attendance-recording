@@ -2,12 +2,9 @@
   <nz-tab
     *ngFor="let tab of tabs;let i = index"
     [nzTitle]="tab"
-    (nzSelect)="log(['select', tab])"
-    (nzClick)="log(['click', tab])"
-    (nzDeselect)="log(['deselect', tab])"
   >
     <div *ngIf="i ===0">
-      <app-cameras-stream></app-cameras-stream>
+      <app-camera-list></app-camera-list>
     </div>
     <div *ngIf="i ===1">
 

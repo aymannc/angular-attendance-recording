@@ -1,22 +1,8 @@
-<!--<nz-spin [nzSpinning]="isLoading">-->
-<!--  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">-->
-<!--    <div class="form-group">-->
-<!--      <label for="emailLogin">Email</label>-->
-<!--      <input type="email" class="form-control" name="email" id="emailLogin" formControlName="email">-->
-<!--    </div>-->
-<!--    <div class="form-group">-->
-<!--      <label for="passLogin">Password</label>-->
-<!--      <input type="password" class="form-control" name="password" id="passLogin" formControlName="password">-->
-<!--    </div>-->
-<!--    <div class="row ml-1">-->
-<!--      <div>-->
-<!--        <button class="btn btn-primary" type="submit"-->
-<!--                [disabled]="!loginForm.valid">'Log in'-->
-<!--        </button>-->
-<!--      </div>-->
-<!--    </div>-->
-<!--  </form>-->
-<!--</nz-spin>-->
+<nz-row nzJustify="center" nzAlign="middle" style="margin-bottom: 20px">
+  <nz-col>
+    <img width="200" src="assets/images/logo_full.jpg">
+  </nz-col>
+</nz-row>
 <nz-spin [nzSpinning]="isLoading">
   <nz-row nzJustify="center" nzAlign="middle">
     <form nz-form [formGroup]="loginForm" class="login-form" (ngSubmit)="onSubmit()">

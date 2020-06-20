@@ -23,7 +23,6 @@ import {UserFormComponent} from './Components/users/user-form/user-form.componen
 import {UserDescriptionComponent} from './Components/users/users-details/user-description/user-description.component';
 import {CamerasComponent} from './Components/cameras/cameras.component';
 import {CamerasTableComponent} from './Components/cameras/cameras-table/cameras-table.component';
-import {CameraDescriptionComponent} from './Components/cameras/cameras-details/camera-description/camera-description.component';
 import {CamerasDetailsComponent} from './Components/cameras/cameras-details/cameras-details.component';
 import {CameraFormComponent} from './Components/cameras/camera-form/camera-form.component';
 import {ComplaintsComponent} from './Components/complaints/complaints.component';
@@ -35,7 +34,7 @@ import {ProfileComponent} from './Components/profile/profile.component';
 import {StudentStatsComponent} from './Components/users/student-stats/student-stats.component';
 import {NgxChartsModule} from '@swimlane/ngx-charts';
 import {CameraListComponent} from './Components/cameras/camera-list/camera-list.component';
-
+import { FullScreenStreamComponent } from './Components/cameras/full-screen-stream/full-screen-stream.component';
 registerLocaleData(en);
 
 @NgModule({
@@ -51,7 +50,6 @@ registerLocaleData(en);
     UserDescriptionComponent,
     CamerasComponent,
     CamerasTableComponent,
-    CameraDescriptionComponent,
     CamerasDetailsComponent,
     CameraFormComponent,
     ComplaintsComponent,
@@ -62,6 +60,7 @@ registerLocaleData(en);
     ProfileComponent,
     StudentStatsComponent,
     CameraListComponent,
+    FullScreenStreamComponent,
   ],
   imports: [
     ReactiveFormsModule,

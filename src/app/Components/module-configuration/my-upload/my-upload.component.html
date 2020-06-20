@@ -48,8 +48,11 @@
   </div>
 </div>
 
-
-<div *ngIf="fileUrl">
-  <img *ngFor="let url of fileUrl" [src]="url" alt="image uploaded" width="200px">
-  <nz-divider></nz-divider>
-</div>
+<nz-row nzGutter="[16,16]" *ngIf="fileUrl" nzAlign="middle" nzJustify="center" style="margin-top: 20px">
+  <h2>Uploaded files</h2>
+</nz-row>
+<nz-row nzGutter="[16,16]" nzAlign="middle" nzJustify="center" style="margin-top: 10px">
+  <nz-col *ngFor="let url of fileUrl" nzXl="6" nzLg="8" nzMd="12" nzSm="24">
+    <img [src]="url" alt="image uploaded" width="200px">
+  </nz-col>
+</nz-row>

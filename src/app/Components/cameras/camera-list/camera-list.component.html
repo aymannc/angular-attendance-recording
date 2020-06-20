@@ -1,1 +1,37 @@
-<p>camera-list works!</p>
+<nz-row *ngIf="cameras" nzJustify="end" nzAlign="middle">
+  <nz-col>
+    <button nz-button nzType="primary" (click)="goToAddCamera()">Add a camera</button>
+  </nz-col>
+</nz-row>
+<nz-spin [nzSpinning]="isLoading" style="margin-top: 10px">
+  <nz-row *ngIf="cameras;else noData" nzJustify="space-around" nzAlign="middle" [nzGutter]="[16,16]">
+    <nz-col *ngFor="let camera of cameras" nzXl="6" nzLg="8" nzMd="12" nzSm="24">
+      <nz-card [nzExtra]="extraTemplate">
+        <video width="100%" [controls]="false" [muted]="true" [loop]="true" [autoplay]="true">
+          <source src="assets/images/camera_demo.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+      </nz-card>
+      <ng-template #extraTemplate>
+        <a (click)="goToDetails(camera)">{{camera.model}}</a>
+      </ng-template>
+    </nz-col>
+  </nz-row>
+  <nz-row nzJustify="center" nzAlign="middle" style="margin-top: 10px">
+    <nz-pagination [nzPageIndex]="pageIndex" [nzTotal]="totalElements" nzShowSizeChanger
+                   [nzPageSize]="pageSize"
+                   (nzPageIndexChange)="getCameras(false)"
+                   (nzPageSizeChange)="getCameras(true)">
+    </nz-pagination>
+<!--    <label for="custPageS">Custom Page Size</label>-->
+<!--    <input nz-input (ngModelChange)="getCameras(true)" id="custPageS" type="number" [(ngModel)]="pageSize"/>-->
+  </nz-row>
+
+  <ng-template #noData>
+    <nz-result *ngIf="!isLoading" nzStatus="info" nzTitle="There is no cameras at the moment">
+      <div nz-result-extra>
+        <button nz-button nzType="primary" (click)="goToAddCamera()">Add a camera</button>
+      </div>
+    </nz-result>
+  </ng-template>
+</nz-spin>
