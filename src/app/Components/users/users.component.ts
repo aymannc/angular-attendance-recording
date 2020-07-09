@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {NzTableQueryParams} from 'ng-zorro-antd/table';
 import {NzContextMenuService, NzDropdownMenuComponent, NzModalService} from 'ng-zorro-antd';
 import {ApiService} from '../../Services/api.service';
-import {User} from '../../Data/APIDataClasses.module';
+import {User} from '../../Data/APIDataClasses';
 import {ActivatedRoute, Router} from '@angular/router';
 
 

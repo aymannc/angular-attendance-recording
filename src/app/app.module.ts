@@ -34,7 +34,13 @@ import {ProfileComponent} from './Components/profile/profile.component';
 import {StudentStatsComponent} from './Components/users/student-stats/student-stats.component';
 import {NgxChartsModule} from '@swimlane/ngx-charts';
 import {CameraListComponent} from './Components/cameras/camera-list/camera-list.component';
-import { FullScreenStreamComponent } from './Components/cameras/full-screen-stream/full-screen-stream.component';
+import {FullScreenStreamComponent} from './Components/cameras/full-screen-stream/full-screen-stream.component';
+import {SideMenuProfComponent} from './Components/side-menu-prof/side-menu-prof.component';
+import {ScheduleComponent} from './Components/schedule/schedule.component';
+import {ListAbsenceComponent} from './Components/absence-list/absence-list.component';
+import {SessionsComponent} from './Components/sessions/sessions.component';
+import {UpcomingSessionsComponent} from './Components/sessions/upcoming-sessions/upcoming-sessions.component';
+
 registerLocaleData(en);
 
 @NgModule({
@@ -61,6 +67,11 @@ registerLocaleData(en);
     StudentStatsComponent,
     CameraListComponent,
     FullScreenStreamComponent,
+    SideMenuProfComponent,
+    ScheduleComponent,
+    ListAbsenceComponent,
+    SessionsComponent,
+    UpcomingSessionsComponent
   ],
   imports: [
     ReactiveFormsModule,

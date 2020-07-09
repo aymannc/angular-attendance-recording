@@ -19,4 +19,16 @@ export class AppComponent implements OnInit {
   checkForUser() {
     return this.authService.authUser.getValue() !== null;
   }
+
+  isUserProf() {
+    return this.authService.authUser.getValue().type === 'Prof';
+  }
+
+  isUserStudent() {
+    return this.authService.authUser.getValue().type === 'Etudient';
+  }
+
+  isUserAdmin() {
+    return this.authService.authUser.getValue().type === 'Etudient';
+  }
 }

@@ -2,17 +2,17 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {BehaviorSubject, throwError} from 'rxjs';
 import {Router} from '@angular/router';
-import {User} from '../Data/APIDataClasses.module';
+import {User} from '../Data/APIDataClasses';
 import {catchError, tap} from 'rxjs/operators';
-import {ApiService} from './api.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   authUser = new BehaviorSubject<User>(null);
+  private springApiUrl = 'http://localhost:8080/';
 
-  constructor(private http: HttpClient, private router: Router, private apiService: ApiService) {
+  constructor(private http: HttpClient, private router: Router) {
   }
 
   private static handleErrors(errorRes: HttpErrorResponse) {
@@ -42,7 +42,7 @@ export class AuthService {
 
 
   logIn(email: string, password: string) {
-    return this.http.post<User>(this.apiService.springApiUrl + 'login', {
+    return this.http.post<User>(this.springApiUrl + 'login', {
       email,
       password,
     })

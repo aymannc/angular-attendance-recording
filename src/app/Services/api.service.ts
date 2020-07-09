@@ -8,13 +8,20 @@ import {
   Filiere,
   Image,
   Room,
+  SeanceResponse,
   Semester,
   StatusResponse,
   User,
   UserPostData,
   UtilisateursResponse
-} from '../Data/APIDataClasses.module';
+} from '../Data/APIDataClasses';
 import {map} from 'rxjs/operators';
+import {AuthService} from './auth.service';
+import {Abscence, AbscenceResponse} from '../Data/AbscenceResponse';
+import {StudentResponse} from '../Data/StudentResponse';
+import {ElementApi, ElementsResponse} from '../Data/ElementsResponse';
+import {SeanceProjectionResponse} from '../Data/SeanceProjectionResponse';
+import {Seance, SeancesResponse} from '../Data/SeancesResponse';
 
 @Injectable({
   providedIn: 'root'
@@ -29,7 +36,7 @@ export class ApiService {
   selectedCamera: Camera;
   cameraLink: string;
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private authService: AuthService) {
   }
 
   getImageUrl(slug: string): string {
@@ -198,5 +205,81 @@ export class ApiService {
         camera.salle = rom;
       });
     });
+  }
+
+  getProfessorsSeances() {
+    const user = this.authService.authUser.getValue();
+    if (user.type === 'Prof') {
+      const url = `http://localhost:8080/professeurs/${user.idUtilisateur}/seances`;
+      console.log(url);
+      return this.http.get<SeanceResponse>(url)
+        .pipe(map(data => data._embedded.seances));
+    }
+  }
+
+  getProfessorsSeancesProjection() {
+    const user = this.authService.authUser.getValue();
+    if (user.type === 'Prof') {
+      const url = this.springApiUrl + '/seances/search/findAllByProfesseurIdAndJourIsNull?pofId=' +
+        user.idUtilisateur + '&projection=SeanceProjection';
+      console.log(url);
+      return this.http.get<SeanceProjectionResponse>(url)
+        .pipe(map(data => data._embedded.seances));
+    }
+  }
+
+  getProfessorsElements(projectionName: string) {
+    const user = this.authService.authUser.getValue();
+    if (user.type === 'Prof') {
+      const url = this.springApiUrl + `professeurs/${user.idUtilisateur}/elements?projection=` + projectionName;
+      console.log(url);
+      return this.http.get<ElementsResponse>(url)
+        .pipe(map(data => data._embedded.elements));
+    }
+  }
+
+  getSeance(id: number) {
+    return this.http.get<Seance>(this.springApiUrl + 'seances/' + id);
+
+  }
+
+  getElement(href?: string, id?: number) {
+    return this.http.get<ElementApi>(href ? href : this.springApiUrl + 'elements/' + id);
+  }
+
+  getAbsanceBySeanceId(seanceId: number) {
+    return this.http.get<AbscenceResponse>(this.springApiUrl + `seances/${seanceId}/abscences`)
+      .pipe(
+        map(data => data._embedded.abscences));
+  }
+
+  getStudent(link: string) {
+    return this.http.get<StudentResponse>(link);
+  }
+
+  editAbsance(data: boolean, id: any) {
+    return this.http.patch<Abscence>(this.springApiUrl + 'abscences/' + id, {abscente: data});
+  }
+
+  getSeancebyElementId(id: number) {
+    const url = this.springApiUrl + '/seances/search/findAllLessThanToday?id=' + id;
+    return this.http
+      .get<SeancesResponse>(url)
+      .pipe(
+        map(data => data._embedded.seances));
+  }
+
+  getAbsencesByHref(absencesHref: string) {
+    return this.http.get<AbscenceResponse>(absencesHref)
+      .pipe(
+        map(data => data._embedded.abscences));
+  }
+
+  getSeancesGreaterThanToday(elementId: number) {
+    const url = this.springApiUrl + '/seances/search/findAllGreaterThanToday?id=' + elementId;
+    return this.http
+      .get<SeancesResponse>(url)
+      .pipe(
+        map(data => data._embedded.seances));
   }
 }

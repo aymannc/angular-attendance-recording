@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {Camera, Status} from '../../../Data/APIDataClasses.module';
+import {Camera, Status} from '../../../Data/APIDataClasses';
 import {ApiService} from '../../../Services/api.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {NzContextMenuService, NzDropdownMenuComponent, NzModalService} from 'ng-zorro-antd';

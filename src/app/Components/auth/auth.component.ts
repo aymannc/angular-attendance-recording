@@ -23,7 +23,7 @@ export class AuthComponent implements OnInit {
   ngOnInit(): void {
     this.loginForm = new FormGroup({
       email: new FormControl(null, [Validators.email, Validators.required]),
-      password: new FormControl(null, [Validators.required, this.passwordValidator]),
+      password: new FormControl(null, [Validators.required]),
       remember: new FormControl(true)
     });
   }

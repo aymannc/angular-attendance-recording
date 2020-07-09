@@ -15,6 +15,10 @@ import {AuthComponent} from './Components/auth/auth.component';
 import {AuthGuard, LoginPageGuard} from './Services/auth.guard';
 import {ProfileComponent} from './Components/profile/profile.component';
 import {FullScreenStreamComponent} from './Components/cameras/full-screen-stream/full-screen-stream.component';
+import {ScheduleComponent} from './Components/schedule/schedule.component';
+import {ListAbsenceComponent} from './Components/absence-list/absence-list.component';
+import {SessionsComponent} from './Components/sessions/sessions.component';
+import {UpcomingSessionsComponent} from './Components/sessions/upcoming-sessions/upcoming-sessions.component';
 
 const routes: Routes = [
   {path: '', component: DemoContentComponent, canActivate: [AuthGuard]},
@@ -46,6 +50,18 @@ const routes: Routes = [
       {path: 'detect-faces', component: DetectFacesComponent},
       {path: 'add', component: MyUploadComponent},
       {path: 'encode-faces', component: EncodeFacesComponent},
+    ]
+  },
+  {
+    path: 'absence', children: [
+      {path: '', component: ScheduleComponent},
+      {path: 'element/:id', component: ListAbsenceComponent},
+    ]
+  },
+  {
+    path: 'sessions', children: [
+      {path: '', component: SessionsComponent},
+      {path: 'upcoming/:id', component: UpcomingSessionsComponent},
     ]
   },
 ];

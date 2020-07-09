@@ -1,6 +1,7 @@
 <nz-layout>
   <nz-sider nzWidth="250px" *ngIf="checkForUser()">
-    <app-side-menu></app-side-menu>
+    <app-side-menu *ngIf="isUserAdmin()"></app-side-menu>
+    <app-side-menu-prof *ngIf="isUserProf()"></app-side-menu-prof>
   </nz-sider>
   <nz-layout>
     <app-header></app-header>
@@ -9,7 +10,6 @@
       <div class="inner-content">
         <router-outlet></router-outlet>
       </div>
-
     </nz-content>
     <!--    <nz-footer>©2020 EagleEye</nz-footer>-->
   </nz-layout>

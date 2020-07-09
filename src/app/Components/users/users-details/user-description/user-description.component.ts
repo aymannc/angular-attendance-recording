@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {ApiService} from '../../../../Services/api.service';
 import {HttpClient} from '@angular/common/http';
 import {NzMessageService} from 'ng-zorro-antd/message';
-import {Complaint, Href, Image} from '../../../../Data/APIDataClasses.module';
+import {Complaint, Href, Image} from '../../../../Data/APIDataClasses';
 import {Router} from '@angular/router';
 import {NzModalService} from 'ng-zorro-antd';
 

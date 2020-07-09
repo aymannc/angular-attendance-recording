@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Departement, Filiere, Image, Semester, UserPostData} from '../../../Data/APIDataClasses.module';
+import {Departement, Filiere, Image, Semester, UserPostData} from '../../../Data/APIDataClasses';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {ApiService} from '../../../Services/api.service';
 import {NzModalService, UploadFile} from 'ng-zorro-antd';

@@ -1,0 +1,25 @@
+<nz-spin [nzSpinning]="isLoading">
+  <nz-table nzTableLayout="fixed" nzBordered [nzData]="rows"
+            #rowSelectionTable [nzFrontPagination]="false">
+    <thead>
+    <tr>
+      <th></th>
+      <th *ngFor="let hour of hours"><i nz-icon nzType="clock-circle" nzTheme="outline"></i>&nbsp;&nbsp;&nbsp;{{hour}}
+      </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let row of rowSelectionTable.data;let i = index">
+      <td class="s">
+        <div><b><i nz-icon nzType="calendar" nzTheme="outline"></i>&nbsp;&nbsp;&nbsp;{{days[i]}}</b>
+        </div>
+      </td>
+      <td *ngFor="let column of row">
+        <a [routerLink]="column.link" *ngIf="column?.link">{{column.element}} <br/>
+          Salle : {{column.salle}}</a>
+      </td>
+    </tr>
+
+    </tbody>
+  </nz-table>
+</nz-spin>

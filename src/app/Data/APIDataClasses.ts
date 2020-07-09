@@ -1,3 +1,5 @@
+import {Seance} from './SeancesResponse';
+
 class Utilisateurs {
   utilisateurs: User[];
 }
@@ -18,7 +20,8 @@ export class UserResponseLinks {
   profile: Href;
 }
 
-export class Href {
+
+export interface Href {
   href: string;
 }
 
@@ -106,26 +109,6 @@ export class Person {
   // tslint:disable-next-line:variable-name
   _links?: PersonLink;
 }
-
-export class Seance {
-  heureDebut: string;
-  heureFin: string;
-  jourSeance: string;
-  status: boolean;
-  type: string;
-  // tslint:disable-next-line:variable-name
-  _links: SeanceLinks;
-}
-
-export class SeanceLinks {
-  self: Href;
-  seance: Href;
-  salle: Href;
-  professeur: Href;
-  abscences: Href;
-  element: Href;
-}
-
 
 export class PersonLink {
   semesstre?: Href | null;
@@ -248,9 +231,6 @@ export interface CameraLink {
   salle: Href;
 }
 
-export interface Href {
-  href: string;
-}
 
 export interface RomResponse {
   _embedded: RomResponseEmbedded;
@@ -315,3 +295,17 @@ export interface Page {
   totalPages: number;
   number: number;
 }
+
+export interface SeancesLinks {
+  self: Href;
+}
+
+export interface SeanceResponse {
+  _embedded: SeanceEmbedded;
+  _links: SeancesLinks;
+}
+
+export interface SeanceEmbedded {
+  seances?: (Seance)[] | null;
+}
+

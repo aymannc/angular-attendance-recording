@@ -1,0 +1,34 @@
+<div class="logo">
+  <a routerLink="/">
+    <img src="assets/images/logo.jpg" alt="logo" height="50px">
+    <span>EagleEye</span>
+  </a>
+</div>
+<ul nz-menu nzTheme="dark" nzMode="inline">
+  <li nz-menu-item [routerLink]="['/absence']">
+    <i nz-icon nzType="alert"></i>
+    <span>Absence Management</span>
+  </li>
+  <li nz-menu-item [routerLink]="['/sessions']">
+    <i nz-icon nzType="book"></i>
+    <span>Sessions Management</span>
+  </li>
+
+  <li nz-submenu nzTitle="Classroom Reservation" nzIcon="form">
+    <ul>
+      <li nz-menu-item [routerLink]="['/classroom']">Reserve a classroom</li>
+      <li nz-menu-item [routerLink]="['/histo']">request history</li>
+    </ul>
+  </li>
+
+
+  <li nz-menu-item [routerLink]="['/stat']">
+    <i nz-icon nzType="dot-chart"></i>
+    <span>Statistics</span>
+  </li>
+
+  <li nz-menu-item [routerLink]="['/studentslist']">
+    <i nz-icon nzType="user"></i>
+    <span>Profile</span>
+  </li>
+</ul>

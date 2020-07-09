@@ -1,0 +1,11 @@
+<nz-collapse>
+  <nz-collapse-panel *ngFor="let e of elements"
+                     [nzHeader]="e.element.nomElement +' - '+e.element.nomFiliere"
+                     [nzActive]="e.active">
+    <div>
+      <a [routerLink]="['/absence','element',e.element.idElement]">● &nbsp;&nbsp;<b>Past sessions</b></a>
+      <br/><br/>
+      <a [routerLink]="['upcoming',e.element.idElement]">● &nbsp;&nbsp;<b>Upcoming sessions</b></a>
+    </div>
+  </nz-collapse-panel>
+</nz-collapse>

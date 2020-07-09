@@ -6,10 +6,6 @@ import {Component, OnInit} from '@angular/core';
   styleUrls: ['./side-menu.component.css']
 })
 export class SideMenuComponent implements OnInit {
-  isCollapsed = false;
-
-  constructor() {
-  }
 
   ngOnInit(): void {
   }

@@ -1,0 +1,96 @@
+<nz-spin [nzSpinning]="pageLoading"
+         *ngIf="!notFound">
+  <h2><a>{{this.element?.nomElement}}</a></h2>
+  <nz-row nzJustify="end" style="margin-bottom: 10px">
+    <nz-col>
+      <label>Select a week: </label>
+      <nz-select style="width: 200px;margin-left: 10px"
+                 nzShowSearch
+                 nzAllowClear
+                 nzPlaceHolder="Select a week"
+                 (ngModelChange)="onSelectChange($event)"
+                 [(ngModel)]="absencesHref">
+        <nz-option *ngFor="let week of weeksList;let i=index" [nzValue]="week.absencesHref"
+                   [nzLabel]="'Week '+(i+1)+' - ' +week.date"></nz-option>
+      </nz-select>
+    </nz-col>
+  </nz-row>
+  <nz-table #filterTable
+            [nzLoading]="loading"
+            [nzData]="this.listOfDisplayData"
+            nzTableLayout="fixed">
+    <thead>
+    <tr>
+      <th
+        *ngFor="let column of listOfColumns;let i=index"
+        [nzSortOrder]="column.sortOrder"
+        [nzSortFn]="column.sortFn"
+        [nzSortDirections]="column.sortDirections"
+        [nzFilterMultiple]="column.filterMultiple"
+        [nzFilters]="column.listOfFilter"
+        [nzFilterFn]="column.filterFn"
+        [nzCustomFilter]="i===0"
+      >
+        {{column.name}}
+        <nz-filter-trigger *ngIf="i===0" [(nzVisible)]="visible" [nzActive]="searchValue.length > 0"
+                           [nzDropdownMenu]="menu">
+          <i nz-icon nzType="search"></i>
+        </nz-filter-trigger>
+      </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let data of filterTable.data">
+      <td>{{ data.name }}</td>
+
+      <td>
+        <div *ngIf="!data.edit;else editGroup">
+          <nz-tag [nzColor]="data.type==='present'?'blue':'red'"> {{data.type}}</nz-tag>
+        </div>
+        <ng-template #editGroup>
+          <nz-radio-group [(ngModel)]="data.type">
+            <label nz-radio nzValue="present">
+              <nz-tag [nzColor]="'blue'">Present</nz-tag>
+            </label>
+            <label nz-radio nzValue="absent">
+              <nz-tag [nzColor]="'red'">Absent</nz-tag>
+            </label>
+          </nz-radio-group>
+        </ng-template>
+      </td>
+      <td>
+        <div class="editable-row-operations">
+          <div *ngIf="!data.edit">
+            <a (click)="startEdit(data)"><i nz-icon nzType="edit" nzTheme="outline"></i> Edit</a><br>
+            <a (click)="createMessage('success')">
+              <i nz-icon nzType="notification" nzTheme="outline"></i> Notify</a>
+          </div>
+          <div *ngIf="data.edit">
+            <a (click)="saveEdit(data)"><i nz-icon nzType="save" nzTheme="outline"></i> Save</a>
+          </div>
+        </div>
+      </td>
+    </tr>
+    </tbody>
+  </nz-table>
+</nz-spin>
+<nz-result
+  *ngIf="notFound && !pageLoading"
+  nzStatus="404"
+  nzTitle="404"
+  nzSubTitle="Sorry, this element does not exist.">
+  <div nz-result-extra>
+    <button nz-button nzType="primary" routerLink="/absence">Back to absences</button>
+  </div>
+</nz-result>
+<nz-dropdown-menu #menu="nzDropdownMenu">
+  <div class="ant-table-filter-dropdown">
+    <div class="search-box">
+      <input type="text" nz-input placeholder="Search name" [(ngModel)]="searchValue"/>
+      <button nz-button nzSize="small" nzType="primary" (click)="search()" class="search-button">
+        Search
+      </button>
+      <button nz-button nzSize="small" (click)="reset()">Reset</button>
+    </div>
+  </div>
+</nz-dropdown-menu>

@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {Camera} from '../../../Data/APIDataClasses.module';
+import {Camera} from '../../../Data/APIDataClasses';
 import {ApiService} from '../../../Services/api.service';
 import {Router} from '@angular/router';
 
