@@ -3,6 +3,26 @@ import {NzMessageService} from 'ng-zorro-antd';
 import {ApiService} from '../../../Services/api.service';
 import {ActivatedRoute} from '@angular/router';
 import {ElementApi} from '../../../Data/ElementsResponse';
+import {NzTableFilterFn, NzTableFilterList, NzTableSortFn, NzTableSortOrder} from 'ng-zorro-antd/table';
+
+interface DataItem {
+  self: string;
+  date: string;
+  startTime: Date;
+  endTime: Date;
+  edit: boolean;
+}
+
+interface ColumnItem {
+  name: string;
+  icon: string;
+  sortOrder?: NzTableSortOrder;
+  sortFn?: NzTableSortFn;
+  listOfFilter?: NzTableFilterList;
+  filterFn?: NzTableFilterFn;
+  filterMultiple?: boolean;
+  sortDirections?: NzTableSortOrder[];
+}
 
 @Component({
   selector: 'app-upcoming-sessions',
@@ -10,56 +30,79 @@ import {ElementApi} from '../../../Data/ElementsResponse';
   styleUrls: ['./upcoming-sessions.component.css']
 })
 export class UpcomingSessionsComponent implements OnInit {
-  i = 1;
-  editCache = {};
-  dataSet = [];
-  dateFormat = 'dd.MM.YYYY';
-  elementId: number;
-  pageLoading: boolean;
+  listOfColumns: ColumnItem[] = [
+    {
+      name: 'Date',
+      sortFn: (a: DataItem, b: DataItem) => a.date.localeCompare(b.date),
+      icon: 'calendar'
+    },
+    {
+      name: 'Start time',
+      sortFn: (a: DataItem, b: DataItem) => a.startTime.toString().localeCompare(a.startTime.toString()),
+      icon: 'clock-circle'
+    }, {
+      name: 'End time',
+      sortFn: (a: DataItem, b: DataItem) => a.endTime.toString().localeCompare(a.endTime.toString()),
+      icon: 'clock-circle'
+    }, {
+      name: 'Action',
+      icon: 'setting'
+    },
+  ];
+  listOfData: DataItem[] = [];
+  loading: any;
   element: ElementApi;
-  notFound: boolean;
+  pageLoading: boolean;
+  notFound = false;
+  private elementId: number;
 
-  constructor(private message: NzMessageService, private apiService: ApiService, private route: ActivatedRoute) {
+  constructor(private message: NzMessageService, private apiService: ApiService,
+              private route: ActivatedRoute) {
   }
 
-  startEdit(key: string): void {
-    this.editCache[key].edit = true;
+  disabledHours(): number[] {
+    return [0, 1, 2, 3, 4, 5, 6, 7, 19, 20, 21, 22, 23];
   }
 
-  cancelEdit(key: string): void {
-    this.editCache[key].edit = false;
+  createMessage(type?: string): void {
+    this.message.success(`Notification sent successfully to students`);
   }
 
-  saveEdit(key: string): void {
-    const index = this.dataSet.findIndex(item => item.key === key);
-    this.dataSet[index] = this.editCache[key].data;
-    this.editCache[key].edit = false;
+  startEdit(data: DataItem): void {
+    data.edit = true;
   }
 
-  updateEditCache(): void {
-    this.dataSet.forEach(item => {
-      if (!this.editCache[item.key]) {
-        this.editCache[item.key] = {
-          edit: false,
-          data: item
-        };
-      }
-    });
+  saveEdit(data: DataItem): void {
+    data.edit = false;
+    this.apiService.editSeance(data.self, data)
+      .subscribe(() => {
+        this.message.success('Updated successfully');
+        this.createMessage();
+      }, () => {
+        this.message.error('Error while updating the state');
+      });
   }
 
   ngOnInit(): void {
-    this.updateEditCache();
     this.checkForElement();
   }
 
-  createMessage(type: string): void {
-    this.message.create(type, `Notification successfully sent to students`);
-  }
-
   private getData() {
+    const data = [];
     this.apiService.getSeancesGreaterThanToday(this.elementId).subscribe(response => {
-      console.log(response);
-    });
+      const today = new Date();
+      response.forEach(item => {
+        const [h, m, s] = item.heureDebut.split(':');
+        const [hh, mm, ss] = item.heureFin.split(':');
+        data.push({
+          self: item._links.self.href,
+          date: item.jour,
+          startTime: new Date(today.getFullYear(), today.getMonth(), today.getDate(), +h, +m, 0),
+          endTime: new Date(today.getFullYear(), today.getMonth(), today.getDate(), +hh, +mm, 0),
+          edit: false
+        });
+      });
+    }, () => this.message.error('Error'), () => this.listOfData = [...data]);
   }
 
   private checkForElement() {

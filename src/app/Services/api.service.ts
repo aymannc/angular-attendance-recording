@@ -22,6 +22,7 @@ import {StudentResponse} from '../Data/StudentResponse';
 import {ElementApi, ElementsResponse} from '../Data/ElementsResponse';
 import {SeanceProjectionResponse} from '../Data/SeanceProjectionResponse';
 import {Seance, SeancesResponse} from '../Data/SeancesResponse';
+import {DatePipe} from '@angular/common';
 
 @Injectable({
   providedIn: 'root'
@@ -36,7 +37,7 @@ export class ApiService {
   selectedCamera: Camera;
   cameraLink: string;
 
-  constructor(private http: HttpClient, private authService: AuthService) {
+  constructor(private http: HttpClient, private authService: AuthService, private datePipe: DatePipe) {
   }
 
   getImageUrl(slug: string): string {
@@ -281,5 +282,28 @@ export class ApiService {
       .get<SeancesResponse>(url)
       .pipe(
         map(data => data._embedded.seances));
+  }
+
+  editSeance(self: string, data: {
+    self: string;
+    date: string;
+    startTime: Date;
+    endTime: Date;
+    edit: boolean;
+  }) {
+    const days = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
+    const jourSeance = days[new Date(data.date).getDay()];
+    const jour = this.datePipe.transform(data.date, 'yyyy-MM-dd');
+    const d = new Date(jour);
+    const heureDebut = new Date(d.getFullYear(), d.getMonth(), d.getDate(), data.startTime.getHours(), data.startTime.getMinutes(), 0);
+    const heureFin = new Date(d.getFullYear(), d.getMonth(), d.getDate(), data.endTime.getHours(), data.endTime.getMinutes(), 0);
+
+    const requestDate = {
+      jourSeance,
+      heureDebut,
+      heureFin,
+      jour
+    };
+    return this.http.patch<Abscence>(self, requestDate);
   }
 }

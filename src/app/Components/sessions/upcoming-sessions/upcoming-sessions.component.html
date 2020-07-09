@@ -1,66 +1,67 @@
 <nz-spin [nzSpinning]="pageLoading"
          *ngIf="!notFound">
-  <nz-table nzTableLayout="fixed"
-            #editRowTable
-            nzBordered
-            [nzData]="dataSet">
+  <nz-table #editRowTable
+            [nzLoading]="loading"
+            [nzData]="this.listOfData"
+            nzTableLayout="fixed">
     <thead>
     <tr>
+      <th
+        *ngFor="let column of listOfColumns"
+        [nzSortOrder]="column.sortOrder"
+        [nzSortFn]="column.sortFn"
+        [nzSortDirections]="column.sortDirections"
+        [nzFilterMultiple]="column.filterMultiple"
+        [nzFilters]="column.listOfFilter"
+        [nzFilterFn]="column.filterFn"
+      ><i nz-icon [nzType]="column.icon" nzTheme="outline"></i>&nbsp;&nbsp;&nbsp;{{column.name}}</th>
 
-      <th><i nz-icon nzType="calendar" nzTheme="outline"></i>&nbsp;&nbsp;&nbsp;Date</th>
-      <th><i nz-icon nzType="clock-circle" nzTheme="outline"></i>&nbsp;&nbsp;&nbsp;Start time</th>
-      <th><i nz-icon nzType="clock-circle" nzTheme="outline"></i>&nbsp;&nbsp;&nbsp;End time</th>
-      <th><i nz-icon nzType="setting" nzTheme="outline"></i>&nbsp;&nbsp;&nbsp;Action</th>
     </tr>
     </thead>
     <tbody>
-    <tr *ngFor="let data of editRowTable.data">
-
-
+    <tr *ngFor="let row of editRowTable.data">
       <td>
-        <ng-container *ngIf="!editCache[data.key].edit">
-          {{data.date | date:'dd.MM.yyyy'}}
+        <ng-container *ngIf="!row.edit">
+          {{row.date | date:'dd/MM/yyyy'}}
         </ng-container>
-        <ng-container *ngIf="editCache[data.key].edit">
-          <nz-date-picker [(ngModel)]="editCache[data.key].data.date" [nzFormat]="dateFormat"></nz-date-picker>
+        <ng-container *ngIf="row.edit">
+          <nz-date-picker [(ngModel)]="row.date" nzFormat="dd:MM:yyyy"></nz-date-picker>
         </ng-container>
       </td>
 
       <td>
-        <ng-container *ngIf="!editCache[data.key].edit">
-          {{data.date | date:'HH:mm'}}
+        <ng-container *ngIf="!row.edit">
+          {{row.startTime | date : 'HH:mm'}}
         </ng-container>
-        <ng-container *ngIf="editCache[data.key].edit">
-          <!-- TODO: FIX BUG: saves only if user changes date or deletes initial time input   -->
-          <nz-time-picker [(ngModel)]="editCache[data.key].data.date" nzFormat="HH:mm"></nz-time-picker>
+        <ng-container *ngIf="row.edit">
+          <nz-time-picker [(ngModel)]="row.startTime" nzFormat="HH:mm"
+                          [nzDisabledHours]="disabledHours" nzHideDisabledOptions
+                          [nzMinuteStep]="15"></nz-time-picker>
         </ng-container>
       </td>
       <td>
-        <ng-container *ngIf="!editCache[data.key].edit">
-          {{data.date2 | date:'HH:mm'}}
+        <ng-container *ngIf="!row.edit">
+          {{row.endTime | date : 'HH:mm'}}
         </ng-container>
-        <ng-container *ngIf="editCache[data.key].edit">
-          <!-- TODO: FIX BUG: saves only if user changes date or deletes initial time input   -->
-          <nz-time-picker [(ngModel)]="editCache[data.key].data.date2" nzFormat="HH:mm"></nz-time-picker>
+        <ng-container *ngIf="row.edit">
+          <nz-time-picker [(ngModel)]="row.endTime" nzFormat="HH:mm"
+                          [nzDisabledHours]="disabledHours" nzHideDisabledOptions
+                          [nzMinuteStep]="15"></nz-time-picker>
         </ng-container>
       </td>
-
 
       <!-- OPERATIONS: edit -->
       <td>
         <div class="editable-row-operations">
-          <ng-container *ngIf="!editCache[data.key].edit">
-            <a (click)="startEdit(data.key)"><i nz-icon nzType="edit" nzTheme="outline"></i>&nbsp;&nbsp;Edit</a>
+          <ng-container *ngIf="!row.edit">
+            <a (click)="startEdit(row)"><i nz-icon nzType="edit" nzTheme="outline"></i>&nbsp;&nbsp;Edit</a>
           </ng-container>
-          <ng-container *ngIf="!editCache[data.key].edit">
+          <ng-container *ngIf="!row.edit">
             <a (click)="createMessage('success')">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i
               nz-icon nzType="notification" nzTheme="outline"></i>&nbsp;&nbsp;Notify</a>
           </ng-container>
-          <ng-container *ngIf="editCache[data.key].edit">
-            <a (click)="saveEdit(data.key)"><i nz-icon nzType="save" nzTheme="outline"></i>&nbsp;&nbsp;Save</a>
-            <nz-popconfirm [nzTitle]="'Sure to cancel?'" (nzOnConfirm)="cancelEdit(data.key)">
-              <a nz-popconfirm>Cancel</a>
-            </nz-popconfirm>
+          <ng-container *ngIf="row.edit">
+            <a (click)="saveEdit(row)"><i nz-icon nzType="save" nzTheme="outline"></i>&nbsp;&nbsp;Save</a>
           </ng-container>
         </div>
       </td>
